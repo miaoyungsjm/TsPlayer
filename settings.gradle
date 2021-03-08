@@ -1,0 +1,3 @@
+include ':libParseTsStream'
+include ':app'
+rootProject.name = "ParseTsPlayer"
