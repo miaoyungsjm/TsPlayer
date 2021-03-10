@@ -1,5 +1,8 @@
 package com.excellence.ggz.libparsetsstream;
 
+import com.excellence.ggz.libparsetsstream.bean.MatchPosition;
+import com.excellence.ggz.libparsetsstream.bean.Packet;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,11 +25,16 @@ public class PacketManager {
     private int mPacketStartPosition = -1;
     private int mPacketLength = -1;
 
+    private OnFilterListener mOnFilterListener;
+
     public PacketManager(String inputFilePath) {
         this.mInputFilePath = inputFilePath;
     }
 
     private void matchPacketLength() {
+        System.out.println("----------");
+        long startTime = System.currentTimeMillis();
+
         mPacketStartPosition = -1;
         mPacketLength = -1;
 
@@ -64,9 +72,14 @@ public class PacketManager {
                 }
             }
             bis.close();
+            System.out.println("[matchPacketLength] read size: " + fileIndex);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        System.out.println("[matchPacketLength] elapsed time: " + elapsedTime);
     }
 
     private boolean matchMethod(int fileIndex, int matchPacketLen, HashMap<Integer, MatchPosition> hashMap) {
@@ -84,6 +97,9 @@ public class PacketManager {
             if (accumulator == MATCH_TIMES) {
                 mPacketStartPosition = startPosition;
                 mPacketLength = matchPacketLen;
+                System.out.println("[matchMethod" + matchPacketLen + "] startPosition: " + mPacketStartPosition);
+                System.out.println("[matchMethod" + matchPacketLen + "] packetLength: " + mPacketLength);
+                System.out.println("[matchMethod" + matchPacketLen + "] accumulator: " + accumulator);
                 return true;
             }
             // 判断所在区间是否相邻
@@ -101,6 +117,11 @@ public class PacketManager {
             matchPos = new MatchPosition(fileIndex, curIntervalPosition, 1);
         }
         hashMap.put(curRelativePosition, matchPos);
+        System.out.println("[matchMethod" + matchPacketLen + "] fileIndex: " + fileIndex +
+                ", relativePosition: " + curRelativePosition +
+                ", startPosition: " + matchPos.getStartPosition() +
+                ", intervalPosition: " + matchPos.getIntervalPosition() +
+                ", accumulator: " + matchPos.getAccumulator());
         return false;
     }
 
@@ -116,5 +137,29 @@ public class PacketManager {
             matchPacketLength();
         }
         return mPacketStartPosition;
+    }
+
+    public void filterPacketByPid(int inputPid) {
+        // todo: filter packet func
+        Packet packet = new Packet(0, 0, 0,
+                0, 0, 0, 0,
+                0, null);
+        if (mOnFilterListener != null) {
+            mOnFilterListener.onResult(packet);
+        }
+    }
+
+    public void setOnFilterListener(OnFilterListener listener) {
+        mOnFilterListener = listener;
+    }
+
+    public interface OnFilterListener {
+        /**
+         * Filter result
+         *
+         * @param packet ts packet entity
+         * @return null
+         */
+        void onResult(Packet packet);
     }
 }
