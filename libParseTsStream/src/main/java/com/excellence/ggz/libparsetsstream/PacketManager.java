@@ -117,11 +117,11 @@ public class PacketManager {
             matchPos = new MatchPosition(fileIndex, curIntervalPosition, 1);
         }
         hashMap.put(curRelativePosition, matchPos);
-        System.out.println("[matchMethod" + matchPacketLen + "] fileIndex: " + fileIndex +
-                ", relativePosition: " + curRelativePosition +
-                ", startPosition: " + matchPos.getStartPosition() +
-                ", intervalPosition: " + matchPos.getIntervalPosition() +
-                ", accumulator: " + matchPos.getAccumulator());
+//        System.out.println("[matchMethod" + matchPacketLen + "] fileIndex: " + fileIndex +
+//                ", relativePosition: " + curRelativePosition +
+//                ", startPosition: " + matchPos.getStartPosition() +
+//                ", intervalPosition: " + matchPos.getIntervalPosition() +
+//                ", accumulator: " + matchPos.getAccumulator());
         return false;
     }
 
@@ -140,13 +140,52 @@ public class PacketManager {
     }
 
     public void filterPacketByPid(int inputPid) {
-        // todo: filter packet func
-        Packet packet = new Packet(0, 0, 0,
-                0, 0, 0, 0,
-                0, null);
-        if (mOnFilterListener != null) {
-            mOnFilterListener.onResult(packet);
+        System.out.println("----------");
+        long startTime = System.currentTimeMillis();
+
+        int packetLength = getPacketLength();
+        int packetStartPosition = getPacketStartPosition();
+        try {
+            File file = new File(mInputFilePath);
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            long pos = bis.skip(packetStartPosition);
+            if (pos != packetStartPosition) {
+                System.out.println("[filterPacketByPid] failed to skip packetStartPosition: " + packetStartPosition);
+                return;
+            }
+
+            byte[] buff = new byte[packetLength * 50];
+            int len;
+            while ((len = bis.read(buff)) != -1) {
+                for (int i = 0; i < len / packetLength; i++) {
+                    byte[] onePacket = new byte[packetLength];
+                    System.arraycopy(buff, packetLength * i, onePacket, 0, packetLength);
+                    if (onePacket[0] == PACKET_HEADER_SYNC_BYTE) {
+                        Packet packet = Packet.newInstance(onePacket);
+                        if (packet.getTransportErrorIndicator() == 1) {
+                            System.out.println("[filterPacketByPid] error: transport_error_indicator == 1");
+                            continue;
+                        }
+                        if (packet.getPid() == inputPid) {
+                            // call back to SectionManager
+                            if (mOnFilterListener != null) {
+                                mOnFilterListener.onFilter(packet);
+                            }
+                        }
+                    } else {
+                        System.out.println("[filterPacketByPid] error: stream is unstable" +
+                                ", need to get new start position");
+                    }
+                }
+            }
+            bis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        System.out.println("[filterPacketByPid] elapsed time: " + elapsedTime);
     }
 
     public void setOnFilterListener(OnFilterListener listener) {
@@ -160,6 +199,6 @@ public class PacketManager {
          * @param packet ts packet entity
          * @return null
          */
-        void onResult(Packet packet);
+        void onFilter(Packet packet);
     }
 }
