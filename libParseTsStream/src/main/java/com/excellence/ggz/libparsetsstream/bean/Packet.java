@@ -1,5 +1,7 @@
 package com.excellence.ggz.libparsetsstream.bean;
 
+import static java.lang.Integer.toHexString;
+
 /**
  * @author ggz
  * @date 2021/3/10
@@ -83,5 +85,26 @@ public class Packet {
 
     public byte[] getPlayLoad() {
         return playLoad;
+    }
+
+
+    public void toPrint() {
+        System.out.println("----------");
+        System.out.println("[Packet] syncByte: 0x" + toHexString(syncByte));
+        System.out.println("[Packet] transportErrorIndicator: 0x" + toHexString(transportErrorIndicator));
+        System.out.println("[Packet] payloadUnitStartIndicator: 0x" + toHexString(payloadUnitStartIndicator));
+        System.out.println("[Packet] transportPriority: 0x" + toHexString(transportPriority));
+        System.out.println("[Packet] pid: 0x" + toHexString(pid));
+        System.out.println("[Packet] transportScramblingControl: 0x" + toHexString(transportScramblingControl));
+        System.out.println("[Packet] adaptationFieldControl: 0x" + toHexString(adaptationFieldControl));
+        System.out.println("[Packet] continuityCounter: 0x" + toHexString(continuityCounter));
+        System.out.println("[Packet] playLoad:");
+        for (int i = 0; i < playLoad.length; i++) {
+            System.out.print(" 0x" + toHexString(playLoad[i] & 0xFF));
+            if (i > 0 && i % 20 == 0) {
+                System.out.println("");
+            }
+        }
+        System.out.println("");
     }
 }
