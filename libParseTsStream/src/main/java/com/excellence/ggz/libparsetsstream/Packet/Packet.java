@@ -1,4 +1,4 @@
-package com.excellence.ggz.libparsetsstream.bean;
+package com.excellence.ggz.libparsetsstream.Packet;
 
 import static java.lang.Integer.toHexString;
 
@@ -7,7 +7,7 @@ import static java.lang.Integer.toHexString;
  * @date 2021/3/10
  */
 public class Packet {
-    private static final int PACKET_HEADER_LENGTH = 4;
+    public static final int PACKET_HEADER_LENGTH = 4;
 
     private int syncByte;
     private int transportErrorIndicator;
@@ -17,7 +17,8 @@ public class Packet {
     private int transportScramblingControl;
     private int adaptationFieldControl;
     private int continuityCounter;
-    private byte[] playLoad;
+    private byte[] payLoad;
+    private int packetLength;
 
     public static Packet newInstance(byte[] buff) {
         int syncByte = buff[0] & 0xFF;
@@ -36,10 +37,13 @@ public class Packet {
 
         return new Packet(syncByte, transportErrorIndicator, payloadUnitStartIndicator,
                 transportPriority, pid, transportScramblingControl,
-                adaptationFieldControl, continuityCounter, playLoad);
+                adaptationFieldControl, continuityCounter, playLoad, packetLength);
     }
 
-    public Packet(int syncByte, int transportErrorIndicator, int payloadUnitStartIndicator, int transportPriority, int pid, int transportScramblingControl, int adaptationFieldControl, int continuityCounter, byte[] playLoad) {
+    public Packet(int syncByte, int transportErrorIndicator, int payloadUnitStartIndicator,
+                  int transportPriority, int pid, int transportScramblingControl,
+                  int adaptationFieldControl, int continuityCounter, byte[] payLoad,
+                  int packetLength) {
         this.syncByte = syncByte;
         this.transportErrorIndicator = transportErrorIndicator;
         this.payloadUnitStartIndicator = payloadUnitStartIndicator;
@@ -48,7 +52,8 @@ public class Packet {
         this.transportScramblingControl = transportScramblingControl;
         this.adaptationFieldControl = adaptationFieldControl;
         this.continuityCounter = continuityCounter;
-        this.playLoad = playLoad;
+        this.payLoad = payLoad;
+        this.packetLength = packetLength;
     }
 
     public int getSyncByte() {
@@ -83,10 +88,13 @@ public class Packet {
         return continuityCounter;
     }
 
-    public byte[] getPlayLoad() {
-        return playLoad;
+    public byte[] getPayLoad() {
+        return payLoad;
     }
 
+    public int getPacketLength() {
+        return packetLength;
+    }
 
     public void toPrint() {
         System.out.println("----------");
@@ -98,9 +106,9 @@ public class Packet {
         System.out.println("[Packet] transportScramblingControl: 0x" + toHexString(transportScramblingControl));
         System.out.println("[Packet] adaptationFieldControl: 0x" + toHexString(adaptationFieldControl));
         System.out.println("[Packet] continuityCounter: 0x" + toHexString(continuityCounter));
-        System.out.println("[Packet] playLoad:");
-        for (int i = 0; i < playLoad.length; i++) {
-            System.out.print(" 0x" + toHexString(playLoad[i] & 0xFF));
+        System.out.println("[Packet] payLoad:");
+        for (int i = 0; i < payLoad.length; i++) {
+            System.out.print(" 0x" + toHexString(payLoad[i] & 0xFF));
             if (i > 0 && i % 20 == 0) {
                 System.out.println("");
             }

@@ -1,7 +1,4 @@
-package com.excellence.ggz.libparsetsstream;
-
-import com.excellence.ggz.libparsetsstream.bean.MatchPosition;
-import com.excellence.ggz.libparsetsstream.bean.Packet;
+package com.excellence.ggz.libparsetsstream.Packet;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -15,17 +12,17 @@ import java.util.HashMap;
  */
 public class PacketManager {
     private static final int PACKET_HEADER_SYNC_BYTE = 0x47;
-    private static final int PACKET_LENGTH_188 = 188;
-    private static final int PACKET_LENGTH_204 = 204;
     private static final int MATCH_TIMES = 10;
     private static final int BUFF_SIZE = 204 * 11;
     private static final int HASH_MAP_CAPACITY = 300;
+    public static final int PACKET_LENGTH_188 = 188;
+    public static final int PACKET_LENGTH_204 = 204;
 
     private String mInputFilePath = null;
     private int mPacketStartPosition = -1;
     private int mPacketLength = -1;
 
-    private OnFilterListener mOnFilterListener;
+    private OnFilterPacketListener mOnFilterPacketListener;
 
     public PacketManager(String inputFilePath) {
         this.mInputFilePath = inputFilePath;
@@ -168,8 +165,8 @@ public class PacketManager {
                         }
                         if (packet.getPid() == inputPid) {
                             // call back to SectionManager
-                            if (mOnFilterListener != null) {
-                                mOnFilterListener.onFilter(packet);
+                            if (mOnFilterPacketListener != null) {
+                                mOnFilterPacketListener.onFilter(packet);
                             }
                         }
                     } else {
@@ -188,11 +185,11 @@ public class PacketManager {
         System.out.println("[filterPacketByPid] elapsed time: " + elapsedTime);
     }
 
-    public void setOnFilterListener(OnFilterListener listener) {
-        mOnFilterListener = listener;
+    public void setOnFilterPacketListener(OnFilterPacketListener listener) {
+        mOnFilterPacketListener = listener;
     }
 
-    public interface OnFilterListener {
+    public interface OnFilterPacketListener {
         /**
          * Filter result
          *

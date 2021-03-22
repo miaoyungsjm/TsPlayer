@@ -1,4 +1,4 @@
-package com.excellence.ggz.libparsetsstream.bean;
+package com.excellence.ggz.libparsetsstream.Packet;
 
 /**
  * @author ggz
