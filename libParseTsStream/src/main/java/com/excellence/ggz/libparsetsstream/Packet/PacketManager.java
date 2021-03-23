@@ -5,12 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * @author ggz
  * @date 2021/3/8
  */
-public class PacketManager {
+public class PacketManager extends Observable {
     private static final int PACKET_HEADER_SYNC_BYTE = 0x47;
     private static final int MATCH_TIMES = 10;
     private static final int BUFF_SIZE = 204 * 11;
@@ -18,11 +19,9 @@ public class PacketManager {
     public static final int PACKET_LENGTH_188 = 188;
     public static final int PACKET_LENGTH_204 = 204;
 
-    private String mInputFilePath = null;
+    private String mInputFilePath;
     private int mPacketStartPosition = -1;
     private int mPacketLength = -1;
-
-    private OnFilterPacketListener mOnFilterPacketListener;
 
     public PacketManager(String inputFilePath) {
         this.mInputFilePath = inputFilePath;
@@ -164,10 +163,8 @@ public class PacketManager {
                             continue;
                         }
                         if (packet.getPid() == inputPid) {
-                            // call back to SectionManager
-                            if (mOnFilterPacketListener != null) {
-                                mOnFilterPacketListener.onFilter(packet);
-                            }
+                            // observable - observer
+                            postNewPacket(packet);
                         }
                     } else {
                         System.out.println("[filterPacketByPid] error: stream is unstable" +
@@ -185,17 +182,8 @@ public class PacketManager {
         System.out.println("[filterPacketByPid] elapsed time: " + elapsedTime);
     }
 
-    public void setOnFilterPacketListener(OnFilterPacketListener listener) {
-        mOnFilterPacketListener = listener;
-    }
-
-    public interface OnFilterPacketListener {
-        /**
-         * Filter result
-         *
-         * @param packet ts packet entity
-         * @return null
-         */
-        void onFilter(Packet packet);
+    private void postNewPacket(Packet packet) {
+        setChanged();
+        notifyObservers(packet);
     }
 }
