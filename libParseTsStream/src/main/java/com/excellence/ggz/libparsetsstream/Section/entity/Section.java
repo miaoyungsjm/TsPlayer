@@ -10,70 +10,34 @@ import static java.lang.Integer.toHexString;
  */
 public class Section {
 
-    private int tableId;
-    private int sectionSyntaxIndicator;
-    private int zero;
-    private int reserved;
-    private int sectionLength;
-    private byte[] sectionBuff;
+    public int tableId;
+    public int sectionSyntaxIndicator;
+    public int sectionLength;
+    public byte[] sectionBuff;
+
     private int remainLength;
 
-    public Section(int tableId, int sectionSyntaxIndicator, int zero, int reserved, int sectionLength, byte[] sectionBuff, int remainLength) {
+    public Section(int tableId, int sectionSyntaxIndicator, int sectionLength, byte[] sectionBuff) {
         this.tableId = tableId;
         this.sectionSyntaxIndicator = sectionSyntaxIndicator;
-        this.zero = zero;
-        this.reserved = reserved;
         this.sectionLength = sectionLength;
         this.sectionBuff = sectionBuff;
-        this.remainLength = remainLength;
     }
 
     public int getTableId() {
         return tableId;
     }
 
-    public void setTableId(int tableId) {
-        this.tableId = tableId;
-    }
-
     public int getSectionSyntaxIndicator() {
         return sectionSyntaxIndicator;
-    }
-
-    public void setSectionSyntaxIndicator(int sectionSyntaxIndicator) {
-        this.sectionSyntaxIndicator = sectionSyntaxIndicator;
-    }
-
-    public int getZero() {
-        return zero;
-    }
-
-    public void setZero(int zero) {
-        this.zero = zero;
-    }
-
-    public int getReserved() {
-        return reserved;
-    }
-
-    public void setReserved(int reserved) {
-        this.reserved = reserved;
     }
 
     public int getSectionLength() {
         return sectionLength;
     }
 
-    public void setSectionLength(int sectionLength) {
-        this.sectionLength = sectionLength;
-    }
-
     public byte[] getSectionBuff() {
         return sectionBuff;
-    }
-
-    public void setSectionBuff(byte[] sectionBuff) {
-        this.sectionBuff = sectionBuff;
     }
 
     public int getRemainLength() {
@@ -89,8 +53,6 @@ public class Section {
         builder.append("\n")
                 .append("[Section] tableId: 0x").append(toHexString(tableId)).append("\n")
                 .append("[Section] sectionSyntaxIndicator: 0x").append(toHexString(sectionSyntaxIndicator)).append("\n")
-                .append("[Section] zero: 0x").append(toHexString(zero)).append("\n")
-                .append("[Section] reserved: 0x").append(toHexString(reserved)).append("\n")
                 .append("[Section] sectionLength: 0x").append(toHexString(sectionLength)).append("\n")
                 .append("[Section] sectionBuff: \n");
         for (int i = 0; i < sectionBuff.length; i++) {

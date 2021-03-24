@@ -19,6 +19,8 @@ public abstract class AbstractSectionManager {
     private Section mSection = null;
     private int mNextContinuityCounter = -1;
 
+    public OnParseListener mParseListener = null;
+
     public void assembleSection(int inputTableId, Packet packet) {
         int packetLength = packet.getPacketLength();
         int adaptationFieldControl = packet.getAdaptationFieldControl();
@@ -31,8 +33,6 @@ public abstract class AbstractSectionManager {
                 // payload_unit_start_indicator == 1，packet carries the first byte of a PSI section
                 int tableId = payLoad[PAYLOAD_POINTER_FIELD] & 0xFF;
                 int sectionSyntaxIndicator = (payLoad[PAYLOAD_POINTER_FIELD + 1] >> 7) & 0x1;
-                int zero = (payLoad[PAYLOAD_POINTER_FIELD + 1] >> 6) & 0x1;
-                int reserved = payLoad[PAYLOAD_POINTER_FIELD + 1] & 0x11;
                 int sectionLength = ((payLoad[PAYLOAD_POINTER_FIELD + 1] & 0x3) << 8 |
                         payLoad[PAYLOAD_POINTER_FIELD + 2] & 0xFF) & 0x3FF;
                 byte[] buff = new byte[sectionLength];
@@ -65,8 +65,8 @@ public abstract class AbstractSectionManager {
                     if (mNextContinuityCounter > CONTINUITY_COUNTER_MAXIMUM) {
                         mNextContinuityCounter = 0;
                     }
-                    mSection = new Section(tableId, sectionSyntaxIndicator, zero, reserved,
-                            sectionLength, buff, remainLength);
+                    mSection = new Section(tableId, sectionSyntaxIndicator, sectionLength, buff);
+                    mSection.setRemainLength(remainLength);
                 }
             } else {
                 if (mSection == null || continuityCounter != mNextContinuityCounter) {
@@ -115,4 +115,12 @@ public abstract class AbstractSectionManager {
     }
 
     public abstract void parseSection(Section section);
+
+    public void setOnParseListener(OnParseListener listener) {
+        mParseListener = listener;
+    }
+
+    public interface OnParseListener {
+        void onFinish(Section section);
+    }
 }

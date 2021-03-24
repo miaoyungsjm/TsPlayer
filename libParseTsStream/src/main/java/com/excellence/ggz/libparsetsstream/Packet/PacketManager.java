@@ -95,9 +95,12 @@ public class PacketManager extends Observable {
             if (accumulator == MATCH_TIMES) {
                 mPacketStartPosition = startPosition;
                 mPacketLength = matchPacketLen;
-                mLogger.debug(matchPacketLen + " startPosition: " + mPacketStartPosition);
-                mLogger.debug(matchPacketLen + " packetLength: " + mPacketLength);
-                mLogger.debug(matchPacketLen + " accumulator: " + accumulator);
+                StringBuilder builder = new StringBuilder();
+                builder.append("\n")
+                        .append("[matchMethod] ").append(matchPacketLen).append(" accumulator: ").append(accumulator).append("\n")
+                        .append("[matchMethod] ").append(matchPacketLen).append(" packetStartPosition: ").append(mPacketStartPosition).append("\n")
+                        .append("[matchMethod] ").append(matchPacketLen).append(" packetLength: ").append(mPacketLength).append("\n");
+                mLogger.debug(builder.toString());
                 return true;
             }
             // 判断所在区间是否相邻
