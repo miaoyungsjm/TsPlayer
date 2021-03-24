@@ -4,12 +4,16 @@ import com.excellence.ggz.libparsetsstream.Packet.PacketManager;
 import com.excellence.ggz.libparsetsstream.Section.AbstractSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager;
+import com.excellence.ggz.libparsetsstream.Section.entity.Program;
+import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+
+import java.util.List;
 
 import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
 
@@ -25,7 +29,7 @@ public class Test {
         root.setLevel(Level.DEBUG);
 
         final PacketManager packetManager = new PacketManager(inputFile);
-        int packetLength = packetManager.getPacketLength();
+        final int packetLength = packetManager.getPacketLength();
         int packetStartPosition = packetManager.getPacketStartPosition();
 
         // observable - observer
@@ -33,9 +37,19 @@ public class Test {
         pasManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
             @Override
             public void onFinish(Section section) {
-                section.toPrint();
+                ProgramAssociationSection programAssociationSection = (ProgramAssociationSection) section;
+                programAssociationSection.toPrint();
                 root.debug("PAT stop filter");
                 packetManager.deleteObserver(pasManager);
+
+                List<Program> programList = programAssociationSection.getProgramList();
+                for (Program program : programList) {
+                    int pmtPid = program.getProgramMapPid();
+                    if (pmtPid > 0) {
+                        // todo: modify filterPacketByPid to filter several pid packets at the same time
+                        packetManager.addFilterPid(pmtPid);
+                    }
+                }
             }
         });
 

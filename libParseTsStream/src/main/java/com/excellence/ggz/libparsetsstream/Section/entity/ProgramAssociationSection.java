@@ -13,20 +13,20 @@ public class ProgramAssociationSection extends Section {
     private int currentNextIndicator;
     private int sectionNumber;
     private int lastSectionNumber;
-    private List<ProgramAssociation> programAssociationList;
+    private List<Program> programList;
     private byte[] crc32;
 
     public ProgramAssociationSection(int tableId, int sectionSyntaxIndicator, int sectionLength,
                                      byte[] sectionBuff, int transportStreamId, int versionNumber,
                                      int currentNextIndicator, int sectionNumber, int lastSectionNumber,
-                                     List<ProgramAssociation> programAssociationList, byte[] crc32) {
+                                     List<Program> programList, byte[] crc32) {
         super(tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
         this.transportStreamId = transportStreamId;
         this.versionNumber = versionNumber;
         this.currentNextIndicator = currentNextIndicator;
         this.sectionNumber = sectionNumber;
         this.lastSectionNumber = lastSectionNumber;
-        this.programAssociationList = programAssociationList;
+        this.programList = programList;
         this.crc32 = crc32;
     }
 
@@ -50,8 +50,8 @@ public class ProgramAssociationSection extends Section {
         return lastSectionNumber;
     }
 
-    public List<ProgramAssociation> getProgramAssociationList() {
-        return programAssociationList;
+    public List<Program> getProgramList() {
+        return programList;
     }
 
     public byte[] getCrc32() {
@@ -70,8 +70,8 @@ public class ProgramAssociationSection extends Section {
                 .append("[PAT] sectionNumber: 0x").append(toHexString(sectionNumber)).append("\n")
                 .append("[PAT] lastSectionNumber: 0x").append(toHexString(lastSectionNumber)).append("\n")
                 .append("[PAT] programList: \n");
-        for (ProgramAssociation programAssociation : programAssociationList) {
-            builder.append(programAssociation.toString());
+        for (Program program : programList) {
+            builder.append(program.toString());
         }
 
         Logger logger = Logger.getLogger(ProgramAssociationSection.class);

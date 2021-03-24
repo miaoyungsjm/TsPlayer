@@ -1,7 +1,7 @@
 package com.excellence.ggz.libparsetsstream.Section;
 
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
-import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociation;
+import com.excellence.ggz.libparsetsstream.Section.entity.Program;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
@@ -52,7 +52,7 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
         byte[] crc32 = new byte[CRC_32];
         System.arraycopy(buff, buff.length - CRC_32, crc32, 0, CRC_32);
 
-        List<ProgramAssociation> programAssociationList = new ArrayList<>();
+        List<Program> programList = new ArrayList<>();
         int programSize = (sectionLength - PROGRAM_START_POS - CRC_32) / SECTION_PROGRAM_LENGTH;
         for (int i = 0; i < programSize; i++) {
             int startPos = PROGRAM_START_POS + SECTION_PROGRAM_LENGTH * i;
@@ -64,14 +64,14 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
             } else {
                 programMapPid = ((buff[startPos + 2] & 0x1F) << 8 | buff[startPos + 3] & 0xFF) & 0x1FFF;
             }
-            ProgramAssociation programAssociation = new ProgramAssociation(programNumber, networkPid, programMapPid);
-            programAssociationList.add(programAssociation);
+            Program program = new Program(programNumber, networkPid, programMapPid);
+            programList.add(program);
         }
 
         ProgramAssociationSection pas = new ProgramAssociationSection(
                 tableId, sectionSyntaxIndicator, sectionLength, buff,
                 transportStreamId, versionNumber, currentNextIndicator,
-                sectionNumber, lastSectionNumber, programAssociationList, crc32);
+                sectionNumber, lastSectionNumber, programList, crc32);
 
         if (mParseListener != null) {
             mParseListener.onFinish(pas);

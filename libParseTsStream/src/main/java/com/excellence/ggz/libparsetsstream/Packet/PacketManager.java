@@ -118,7 +118,7 @@ public class PacketManager extends Observable {
             matchPos = new MatchPosition(fileIndex, curIntervalPosition, 1);
         }
         hashMap.put(curRelativePosition, matchPos);
-//       mLogger.debug("[matchMethod" + matchPacketLen + "] fileIndex: " + fileIndex +
+//       mLogger.debug("\n[matchMethod] " + matchPacketLen + " fileIndex: " + fileIndex +
 //                ", relativePosition: " + curRelativePosition +
 //                ", startPosition: " + matchPos.getStartPosition() +
 //                ", intervalPosition: " + matchPos.getIntervalPosition() +
@@ -189,5 +189,8 @@ public class PacketManager extends Observable {
     private void postNewPacket(Packet packet) {
         setChanged();
         notifyObservers(packet);
+    }
+
+    public void addFilterPid(int pid) {
     }
 }
