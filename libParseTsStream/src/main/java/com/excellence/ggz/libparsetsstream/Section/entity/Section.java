@@ -1,5 +1,7 @@
 package com.excellence.ggz.libparsetsstream.Section.entity;
 
+import org.apache.log4j.Logger;
+
 import static java.lang.Integer.toHexString;
 
 /**
@@ -83,19 +85,22 @@ public class Section {
     }
 
     public void toPrint() {
-        System.out.println("----------");
-        System.out.println("[Section] tableId: 0x" + toHexString(tableId));
-        System.out.println("[Section] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator));
-        System.out.println("[Section] zero: 0x" + toHexString(zero));
-        System.out.println("[Section] reserved: 0x" + toHexString(reserved));
-        System.out.println("[Section] sectionLength: 0x" + toHexString(sectionLength));
-        System.out.println("[Section] sectionBuff:");
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n")
+                .append("[Section] tableId: 0x").append(toHexString(tableId)).append("\n")
+                .append("[Section] sectionSyntaxIndicator: 0x").append(toHexString(sectionSyntaxIndicator)).append("\n")
+                .append("[Section] zero: 0x").append(toHexString(zero)).append("\n")
+                .append("[Section] reserved: 0x").append(toHexString(reserved)).append("\n")
+                .append("[Section] sectionLength: 0x").append(toHexString(sectionLength)).append("\n")
+                .append("[Section] sectionBuff: \n");
         for (int i = 0; i < sectionBuff.length; i++) {
-            System.out.print(" 0x" + toHexString(sectionBuff[i] & 0xFF));
+            builder.append("0x").append(toHexString(sectionBuff[i] & 0xFF)).append(", ");
             if (i > 0 && i % 20 == 0) {
-                System.out.println("");
+                builder.append("\n");
             }
         }
-        System.out.println("");
+
+        Logger logger = Logger.getLogger(Section.class);
+        logger.debug(builder.toString());
     }
 }

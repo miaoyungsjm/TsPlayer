@@ -3,6 +3,8 @@ package com.excellence.ggz.libparsetsstream.Section;
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
+import org.apache.log4j.Logger;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,8 +41,6 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         if (packet.getPid() == PAT_PID) {
-            System.out.println("----------");
-            System.out.println("[update] PAT pid: " + PAT_PID);
             packet.toPrint();
             assembleSection(PAT_TABLE_ID, packet);
         }

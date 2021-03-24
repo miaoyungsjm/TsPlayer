@@ -39,8 +39,6 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         if (packet.getPid() == SDT_PID) {
-            System.out.println("----------");
-            System.out.println("[update] SDT pid: " + SDT_PID);
             packet.toPrint();
             assembleSection(SDT_TABLE_ID, packet);
         }

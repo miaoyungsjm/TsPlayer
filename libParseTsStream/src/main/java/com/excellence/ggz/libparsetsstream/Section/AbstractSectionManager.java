@@ -105,14 +105,12 @@ public abstract class AbstractSectionManager {
             }
 
             if (mSection != null) {
-//                mSection.toPrint();
                 if (mSection.getRemainLength() == 0) {
                     parseSection(mSection);
                 }
             }
         } else {
             // todo: adaptation_field()
-            System.out.println("[assembleSection] todo: adaptation_field()");
         }
     }
 

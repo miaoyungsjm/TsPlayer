@@ -31,8 +31,6 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
-        System.out.println("----------");
-        System.out.println("[update] PMT pid: " + mFilterPid);
         if (packet.getPid() == mFilterPid) {
             packet.toPrint();
             assembleSection(PMT_TABLE_ID, packet);

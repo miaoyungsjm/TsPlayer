@@ -1,5 +1,7 @@
 package com.excellence.ggz.libparsetsstream.Packet;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +21,7 @@ public class PacketManager extends Observable {
     public static final int PACKET_LENGTH_188 = 188;
     public static final int PACKET_LENGTH_204 = 204;
 
+    private Logger mLogger = Logger.getLogger(PacketManager.class);
     private String mInputFilePath;
     private int mPacketStartPosition = -1;
     private int mPacketLength = -1;
@@ -28,7 +31,6 @@ public class PacketManager extends Observable {
     }
 
     private void matchPacketLength() {
-        System.out.println("----------");
         long startTime = System.currentTimeMillis();
 
         mPacketStartPosition = -1;
@@ -68,14 +70,14 @@ public class PacketManager extends Observable {
                 }
             }
             bis.close();
-            System.out.println("[matchPacketLength] read size: " + fileIndex);
+            mLogger.debug("read size: " + fileIndex);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
-        System.out.println("[matchPacketLength] elapsed time: " + elapsedTime);
+        mLogger.debug("elapsed time: " + elapsedTime);
     }
 
     private boolean matchMethod(int fileIndex, int matchPacketLen, HashMap<Integer, MatchPosition> hashMap) {
@@ -93,9 +95,9 @@ public class PacketManager extends Observable {
             if (accumulator == MATCH_TIMES) {
                 mPacketStartPosition = startPosition;
                 mPacketLength = matchPacketLen;
-                System.out.println("[matchMethod" + matchPacketLen + "] startPosition: " + mPacketStartPosition);
-                System.out.println("[matchMethod" + matchPacketLen + "] packetLength: " + mPacketLength);
-                System.out.println("[matchMethod" + matchPacketLen + "] accumulator: " + accumulator);
+                mLogger.debug(matchPacketLen + " startPosition: " + mPacketStartPosition);
+                mLogger.debug(matchPacketLen + " packetLength: " + mPacketLength);
+                mLogger.debug(matchPacketLen + " accumulator: " + accumulator);
                 return true;
             }
             // 判断所在区间是否相邻
@@ -113,7 +115,7 @@ public class PacketManager extends Observable {
             matchPos = new MatchPosition(fileIndex, curIntervalPosition, 1);
         }
         hashMap.put(curRelativePosition, matchPos);
-//        System.out.println("[matchMethod" + matchPacketLen + "] fileIndex: " + fileIndex +
+//       mLogger.debug("[matchMethod" + matchPacketLen + "] fileIndex: " + fileIndex +
 //                ", relativePosition: " + curRelativePosition +
 //                ", startPosition: " + matchPos.getStartPosition() +
 //                ", intervalPosition: " + matchPos.getIntervalPosition() +
@@ -136,7 +138,6 @@ public class PacketManager extends Observable {
     }
 
     public void filterPacketByPid(int inputPid) {
-        System.out.println("----------");
         long startTime = System.currentTimeMillis();
 
         int packetLength = getPacketLength();
@@ -146,7 +147,7 @@ public class PacketManager extends Observable {
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             long pos = bis.skip(packetStartPosition);
             if (pos != packetStartPosition) {
-                System.out.println("[filterPacketByPid] failed to skip packetStartPosition: " + packetStartPosition);
+                mLogger.debug("[filterPacketByPid] failed to skip packetStartPosition: " + packetStartPosition);
                 return;
             }
 
@@ -159,7 +160,7 @@ public class PacketManager extends Observable {
                     if (onePacket[0] == PACKET_HEADER_SYNC_BYTE) {
                         Packet packet = Packet.newInstance(onePacket);
                         if (packet.getTransportErrorIndicator() == 1) {
-                            System.out.println("[filterPacketByPid] error: transport_error_indicator == 1");
+                            mLogger.debug("[filterPacketByPid] error: transport_error_indicator == 1");
                             continue;
                         }
                         if (packet.getPid() == inputPid) {
@@ -167,7 +168,7 @@ public class PacketManager extends Observable {
                             postNewPacket(packet);
                         }
                     } else {
-                        System.out.println("[filterPacketByPid] error: stream is unstable" +
+                        mLogger.debug("[filterPacketByPid] error: stream is unstable" +
                                 ", need to get new start position");
                     }
                 }
@@ -179,7 +180,7 @@ public class PacketManager extends Observable {
 
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
-        System.out.println("[filterPacketByPid] elapsed time: " + elapsedTime);
+        mLogger.debug("elapsed time: " + elapsedTime);
     }
 
     private void postNewPacket(Packet packet) {

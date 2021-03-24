@@ -4,6 +4,11 @@ import com.excellence.ggz.libparsetsstream.Packet.PacketManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
 
 public class Test {
@@ -12,6 +17,10 @@ public class Test {
 
     public static void main(String[] args) {
         String inputFile = INPUT_FILE2_PATH;
+
+        Logger root = Logger.getRootLogger();
+        root.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
+        root.setLevel(Level.DEBUG);
 
         PacketManager packetManager = new PacketManager(inputFile);
         int packetLength = packetManager.getPacketLength();
