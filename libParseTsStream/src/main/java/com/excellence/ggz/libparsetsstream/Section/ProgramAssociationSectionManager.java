@@ -5,6 +5,8 @@ import com.excellence.ggz.libparsetsstream.Section.entity.Program;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -23,6 +25,8 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
 
     private static volatile ProgramAssociationSectionManager sInstance = null;
 
+    private Logger mLogger = Logger.getLogger(ProgramAssociationSectionManager.class);
+
     private ProgramAssociationSectionManager() {
     }
 
@@ -39,6 +43,8 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
 
     @Override
     public void parseSection(Section section) {
+        mLogger.debug("\n[PAS] parse Section");
+
         int tableId = section.getTableId();
         int sectionSyntaxIndicator = section.getSectionSyntaxIndicator();
         int sectionLength = section.getSectionLength();
@@ -81,7 +87,9 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
+        mLogger.debug("\n[PAS] get packet");
         if (packet.getPid() == PAT_PID) {
+            mLogger.debug("\n[PAS] assembleSection");
             assembleSection(PAT_TABLE_ID, packet);
         }
     }

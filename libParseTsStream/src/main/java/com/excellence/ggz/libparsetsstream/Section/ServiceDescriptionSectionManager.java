@@ -3,6 +3,8 @@ package com.excellence.ggz.libparsetsstream.Section;
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
+import org.apache.log4j.Logger;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,6 +17,8 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     public static final int SDT_TABLE_ID = 0x42;
 
     private static volatile ServiceDescriptionSectionManager sInstance = null;
+
+    private Logger mLogger = Logger.getLogger(ServiceDescriptionSectionManager.class);
 
     private ServiceDescriptionSectionManager() {
     }
@@ -32,14 +36,20 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
 
     @Override
     public void parseSection(Section section) {
-        section.toPrint();
+        mLogger.debug("\n[SDS] parse Section");
+
+        if (mParseListener != null) {
+            mParseListener.onFinish(section);
+        }
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
+        Logger logger = Logger.getLogger(ServiceDescriptionSectionManager.class);
+        logger.debug("\n[SDS] get packet");
         if (packet.getPid() == SDT_PID) {
-            packet.toPrint();
+            logger.debug("\n[SDS] assembleSection");
             assembleSection(SDT_TABLE_ID, packet);
         }
     }

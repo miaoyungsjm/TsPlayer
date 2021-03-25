@@ -105,6 +105,7 @@ public abstract class AbstractSectionManager {
             }
 
             if (mSection != null) {
+                mSection.toPrint();
                 if (mSection.getRemainLength() == 0) {
                     parseSection(mSection);
                 }

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Observable;
 
+import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
+import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
+
 /**
  * @author ggz
  * @date 2021/3/8
@@ -166,7 +169,7 @@ public class PacketManager extends Observable {
                             mLogger.debug("[filterPacketByPid] error: transport_error_indicator == 1");
                             continue;
                         }
-                        if (packet.getPid() == inputPid) {
+                        if (packet.getPid() == PAT_PID | packet.getPid() == SDT_PID) {
                             // observable - observer
                             postNewPacket(packet);
                         }
@@ -187,6 +190,8 @@ public class PacketManager extends Observable {
     }
 
     private void postNewPacket(Packet packet) {
+        mLogger.debug("\n[PacketManager] post packet");
+        packet.toPrint();
         setChanged();
         notifyObservers(packet);
     }

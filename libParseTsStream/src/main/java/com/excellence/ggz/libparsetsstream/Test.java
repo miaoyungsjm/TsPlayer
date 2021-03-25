@@ -16,13 +16,14 @@ import org.apache.log4j.PatternLayout;
 import java.util.List;
 
 import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
+import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
 
 public class Test {
     private static final String INPUT_FILE1_PATH = "/Users/miaoyun/Documents/ts_file/001.ts";
     private static final String INPUT_FILE2_PATH = "f:/bak/sx/tools/001.ts";
 
     public static void main(String[] args) {
-        String inputFile = INPUT_FILE1_PATH;
+        String inputFile = INPUT_FILE2_PATH;
 
         final Logger root = Logger.getRootLogger();
         root.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
@@ -39,7 +40,7 @@ public class Test {
             public void onFinish(Section section) {
                 ProgramAssociationSection programAssociationSection = (ProgramAssociationSection) section;
                 programAssociationSection.toPrint();
-                root.debug("PAT stop filter");
+                root.debug("\n[PAS] stop filter");
                 packetManager.deleteObserver(pasManager);
 
                 List<Program> programList = programAssociationSection.getProgramList();
@@ -57,7 +58,7 @@ public class Test {
         sdsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
             @Override
             public void onFinish(Section section) {
-                root.debug("SDT stop filter");
+                root.debug("\n[SDS] stop filter");
                 packetManager.deleteObserver(sdsManager);
             }
         });
@@ -65,6 +66,6 @@ public class Test {
         // start filter
         packetManager.addObserver(pasManager);
         packetManager.addObserver(sdsManager);
-        packetManager.filterPacketByPid(PAT_PID);
+        packetManager.filterPacketByPid(SDT_PID);
     }
 }
