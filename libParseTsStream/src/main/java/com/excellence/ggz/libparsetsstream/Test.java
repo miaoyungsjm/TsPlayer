@@ -7,6 +7,7 @@ import com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionMana
 import com.excellence.ggz.libparsetsstream.Section.entity.Program;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
+import com.excellence.ggz.libparsetsstream.Section.entity.ServiceDescriptionSection;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -58,8 +59,13 @@ public class Test {
         sdsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
             @Override
             public void onFinish(Section section) {
+                ServiceDescriptionSection serviceDescriptionSection = (ServiceDescriptionSection) section;
+                serviceDescriptionSection.toPrint();
+
                 root.debug("\n[SDS] stop filter");
                 packetManager.deleteObserver(sdsManager);
+
+
             }
         });
 
