@@ -53,12 +53,12 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
         int sectionLength = section.getSectionLength();
         byte[] buff = section.getSectionBuff();
 
-        int transportStreamId = ((buff[0] & 0xFF << 8) | buff[1] & 0xFF) & 0xFFFF;
+        int transportStreamId = (((buff[0] & 0xFF) << 8) | buff[1] & 0xFF) & 0xFFFF;
         int versionNumber = (buff[2] >> 1) & 0x1F;
         int currentNextIndicator = buff[2] & 0x1;
         int sectionNumber = buff[3] & 0xFF;
         int lastSectionNumber = buff[4] & 0xFF;
-        int originalNetworkId = ((buff[5] & 0xFF << 8) | buff[6] & 0xFF) & 0xFFFF;
+        int originalNetworkId = (((buff[5] & 0xFF) << 8) | buff[6] & 0xFF) & 0xFFFF;
         byte[] crc32 = new byte[CRC_32];
         System.arraycopy(buff, buff.length - CRC_32, crc32, 0, CRC_32);
 

@@ -50,7 +50,7 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
         int sectionLength = section.getSectionLength();
         byte[] buff = section.getSectionBuff();
 
-        int transportStreamId = (buff[0] & 0xFF) << 8 | buff[1] & 0xFF;
+        int transportStreamId = (((buff[0] & 0xFF) << 8) | buff[1] & 0xFF) & 0xFFFF;
         int versionNumber = (buff[2] >> 1) & 0x1F;
         int currentNextIndicator = buff[2] & 0x1;
         int sectionNumber = buff[3];
