@@ -2,6 +2,8 @@ package com.excellence.ggz.libparsetsstream.Packet;
 
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
+
 import static java.lang.Integer.toHexString;
 
 /**
@@ -98,26 +100,27 @@ public class Packet {
         return packetLength;
     }
 
-    public void toPrint() {
+    @Override
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\n")
-                .append("[Packet] syncByte: 0x").append(toHexString(syncByte)).append("\n")
-                .append("[Packet] transportErrorIndicator: 0x").append(toHexString(transportErrorIndicator)).append("\n")
-                .append("[Packet] payloadUnitStartIndicator: 0x").append(toHexString(payloadUnitStartIndicator)).append("\n")
-                .append("[Packet] transportPriority: 0x").append(toHexString(transportPriority)).append("\n")
-                .append("[Packet] pid: 0x").append(toHexString(pid)).append("\n")
-                .append("[Packet] transportScramblingControl: 0x").append(toHexString(transportScramblingControl)).append("\n")
-                .append("[Packet] adaptationFieldControl: 0x").append(toHexString(adaptationFieldControl)).append("\n")
-                .append("[Packet] continuityCounter: 0x").append(toHexString(continuityCounter)).append("\n")
-                .append("[Packet] payLoad: \n");
+        String packet = "\n" +
+                "[Packet] syncByte: 0x" + toHexString(syncByte) + "\n" +
+                "[Packet] transportErrorIndicator: 0x" + toHexString(transportErrorIndicator) + "\n" +
+                "[Packet] payloadUnitStartIndicator: 0x" + toHexString(payloadUnitStartIndicator) + "\n" +
+                "[Packet] transportPriority: 0x" + toHexString(transportPriority) + "\n" +
+                "[Packet] pid: 0x" + toHexString(pid) + "\n" +
+                "[Packet] transportScramblingControl: 0x" + toHexString(transportScramblingControl) + "\n" +
+                "[Packet] adaptationFieldControl: 0x" + toHexString(adaptationFieldControl) + "\n" +
+                "[Packet] continuityCounter: 0x" + toHexString(continuityCounter) + "\n" +
+                "[Packet] payLoad: \n";
+        builder.append(packet);
         for (int i = 0; i < payLoad.length; i++) {
-            builder.append("0x").append(toHexString(payLoad[i] & 0xFF)).append(", ");
+            String tmp = "0x" + toHexString(payLoad[i] & 0xFF) + ", ";
+            builder.append(tmp);
             if (i > 0 && i % 20 == 0) {
                 builder.append("\n");
             }
         }
-
-        Logger logger = Logger.getLogger(Packet.class);
-        logger.debug(builder.toString());
+        return builder.toString();
     }
 }

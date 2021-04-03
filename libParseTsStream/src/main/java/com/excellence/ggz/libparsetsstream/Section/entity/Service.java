@@ -2,6 +2,8 @@ package com.excellence.ggz.libparsetsstream.Section.entity;
 
 import com.excellence.ggz.libparsetsstream.descriptor.ServiceDescriptor;
 
+import static java.lang.Integer.toHexString;
+
 /**
  * @author ggz
  * @date 2021/3/30
@@ -86,12 +88,12 @@ public class Service {
     @Override
     public String toString() {
         return "------\n" +
-                "[Service] serviceId: 0x" + serviceId + "\n" +
-                "[Service] eitScheduleFlag: 0x" + eitScheduleFlag + "\n" +
-                "[Service] eitPresentFollowingFlag: 0x" + eitPresentFollowingFlag + "\n" +
-                "[Service] runningStatus: 0x" + runningStatus + "\n" +
-                "[Service] freeCaMode: 0x" + freeCaMode + "\n" +
-                "[Service] descriptorsLoopLength: 0x" + descriptorsLoopLength + "\n" +
+                "[Service] serviceId: 0x" + toHexString(serviceId) + "\n" +
+                "[Service] eitScheduleFlag: 0x" + toHexString(eitScheduleFlag) + "\n" +
+                "[Service] eitPresentFollowingFlag: 0x" + toHexString(eitPresentFollowingFlag) + "\n" +
+                "[Service] runningStatus: 0x" + toHexString(runningStatus) + "\n" +
+                "[Service] freeCaMode: 0x" + toHexString(freeCaMode) + "\n" +
+                "[Service] descriptorsLoopLength: 0x" + toHexString(descriptorsLoopLength) + "\n" +
                 "[Service] serviceDescriptor: \n" +
                 serviceDescriptor.toString();
     }

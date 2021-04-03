@@ -191,7 +191,7 @@ public class PacketManager extends Observable {
 
     private void postNewPacket(Packet packet) {
         mLogger.debug("\n[PacketManager] post packet");
-        packet.toPrint();
+        mLogger.debug(packet.toString());
         setChanged();
         notifyObservers(packet);
     }

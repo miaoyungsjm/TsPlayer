@@ -66,12 +66,12 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
         int serviceLength = sectionLength - SECTION_HEADER - CRC_32;
         int i = 0;
         while (i < serviceLength) {
-            int serviceId = ((buff[8 + i] & 0xFF << 8) | buff[9 + i] & 0xFF) & 0xFFFF;
+            int serviceId = (((buff[8 + i] & 0xFF) << 8) | buff[9 + i] & 0xFF) & 0xFFFF;
             int eitScheduleFollowingFlag = (buff[10 + i] >> 1) & 0x1;
             int eitPresentFollowingFlag = (buff[10 + i]) & 0x1;
             int runningStatus = (buff[11 + i] >> 5) & 0x7;
             int freeCaMode = (buff[11 + i] >> 4) & 0x1;
-            int descriptorLoopLength = ((buff[11 + i] & 0xF << 4) | buff[12 + i] & 0xFF) & 0xFFF;
+            int descriptorLoopLength = (((buff[11 + i] & 0xF) << 4) | buff[12 + i] & 0xFF) & 0xFFF;
 
             byte[] descriptorBuf = new byte[descriptorLoopLength];
             int descriptorStartPos = SECTION_HEADER + i + SERVICE_HEADER;

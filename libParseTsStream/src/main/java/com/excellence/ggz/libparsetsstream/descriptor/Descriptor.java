@@ -13,8 +13,9 @@ public class Descriptor {
 
     public static Descriptor newInstance(byte[] buff) {
         int descriptorTag = buff[0] & 0xFF;
-        int descriptorLength = (buff[1] >> 7) & 0x1;
+        int descriptorLength = buff[1] & 0xFF;
         byte[] descriptorBuff = new byte[descriptorLength];
+        System.arraycopy(buff, 2, descriptorBuff, 0, descriptorLength);
         return new Descriptor(descriptorTag, descriptorLength, descriptorBuff);
     }
 
@@ -50,13 +51,16 @@ public class Descriptor {
 
     @Override
     public String toString() {
+
         StringBuilder builder = new StringBuilder();
-        builder.append("\n")
-                .append("[Descriptor] descriptorTag :0x").append(toHexString(descriptorTag)).append("\n")
-                .append("[Descriptor] descriptorLength :0x").append(toHexString(descriptorLength)).append("\n")
-                .append("[Descriptor] descriptorData : ");
+        String descriptor = "\n" +
+                "[Descriptor] descriptorTag: 0x" + toHexString(descriptorTag) + "\n" +
+                "[Descriptor] descriptorLength: 0x" + toHexString(descriptorLength) + "\n" +
+                "[Descriptor] descriptorBuff: \n";
+        builder.append(descriptor);
         for (int i = 0; i < descriptorBuff.length; i++) {
-            builder.append("0x").append(toHexString(descriptorBuff[i] & 0xFF)).append(", ");
+            String tmp = "0x" + toHexString(descriptorBuff[i] & 0xFF) + ", ";
+            builder.append(tmp);
             if (i > 0 && i % 20 == 0) {
                 builder.append("\n");
             }

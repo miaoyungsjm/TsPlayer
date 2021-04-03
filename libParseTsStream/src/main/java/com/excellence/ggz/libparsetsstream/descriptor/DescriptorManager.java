@@ -74,15 +74,17 @@ public class DescriptorManager {
         int descriptorTag = descriptor.getDescriptorTag();
         int descriptorLength = descriptor.getDescriptorLength();
         byte[] descriptorBuff = descriptor.getDescriptorBuff();
+
         int serviceType = descriptorBuff[0] & 0xFF;
         int serviceProviderNameLength = descriptorBuff[1] & 0xFF;
         byte[] serviceProviderByte = new byte[serviceProviderNameLength];
         System.arraycopy(descriptorBuff, 2, serviceProviderByte, 0, serviceProviderNameLength);
-        int startServiceNamePos = serviceProviderNameLength + 2;
-        int serviceNameLength = descriptorBuff[startServiceNamePos] & 0xFF;
+
+        int serviceNameLength = descriptorBuff[2 + serviceProviderNameLength] & 0xFF;
         int startServiceNameBuffPos = serviceProviderNameLength + 3;
         byte[] serviceByte = new byte[serviceNameLength];
         System.arraycopy(descriptorBuff, startServiceNameBuffPos, serviceByte, 0, serviceNameLength);
+
         return new ServiceDescriptor(descriptorTag, descriptorLength, descriptorBuff, serviceType, serviceProviderNameLength,
                 serviceProviderByte, serviceNameLength, serviceByte);
     }

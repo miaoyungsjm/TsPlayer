@@ -1,8 +1,5 @@
 package com.excellence.ggz.libparsetsstream.Section.entity;
 
-import org.apache.log4j.Logger;
-
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.toHexString;
@@ -103,41 +100,22 @@ public class ServiceDescriptionSection extends Section {
 
     @Override
     public String toString() {
-        return "\n" +
-                "[SDT] tableId: 0x" + tableId +"\n" +
-                "[SDT] sectionSyntaxIndicator: 0x" + sectionSyntaxIndicator +
-                "[SDT] sectionLength: 0x" + sectionLength +
-                "transportStreamId=" + transportStreamId +
-                ", versionNumber=" + versionNumber +
-                ", currentNextIndicator=" + currentNextIndicator +
-                ", sectionNumber=" + sectionNumber +
-                ", lastSectionNumber=" + lastSectionNumber +
-                ", originalNetworkId=" + originalNetworkId +
-                ", serviceList=" + serviceList +
-                ", crc32=" + Arrays.toString(crc32) +
-                ", sectionBuff=" + Arrays.toString(sectionBuff) +
-                '}';
-    }
-
-    @Override
-    public void toPrint() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\n")
-                .append("[SDT] tableId: 0x").append(toHexString(tableId)).append("\n")
-                .append("[SDT] sectionSyntaxIndicator: 0x").append(toHexString(sectionSyntaxIndicator)).append("\n")
-                .append("[SDT] sectionLength: 0x").append(toHexString(sectionLength)).append("\n")
-                .append("[SDT] transportStreamId: 0x").append(toHexString(transportStreamId)).append("\n")
-                .append("[SDT] versionNumber: 0x").append(toHexString(versionNumber)).append("\n")
-                .append("[SDT] currentNextIndicator: 0x").append(toHexString(currentNextIndicator)).append("\n")
-                .append("[SDT] sectionNumber: 0x").append(toHexString(sectionNumber)).append("\n")
-                .append("[SDT] lastSectionNumber: 0x").append(toHexString(lastSectionNumber)).append("\n")
-                .append("[SDT] originalNetworkId: 0x").append(toHexString(originalNetworkId)).append("\n")
-                .append("[SDT] serviceList: \n");
+        String sdt = "\n" +
+                "[SDT] tableId: 0x" + toHexString(tableId) + "\n" +
+                "[SDT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
+                "[SDT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +
+                "[SDT] transportStreamId: 0x" + toHexString(transportStreamId) + "\n" +
+                "[SDT] versionNumber: 0x" + toHexString(versionNumber) + "\n" +
+                "[SDT] currentNextIndicator: 0x" + toHexString(currentNextIndicator) + "\n" +
+                "[SDT] sectionNumber: 0x" + toHexString(sectionNumber) + "\n" +
+                "[SDT] lastSectionNumber: 0x" + toHexString(lastSectionNumber) + "\n" +
+                "[SDT] originalNetworkId: 0x" + toHexString(originalNetworkId) + "\n" +
+                "[SDT] serviceList: \n";
+        builder.append(sdt);
         for (Service service : serviceList) {
             builder.append(service.toString());
         }
-
-        Logger logger = Logger.getLogger(ProgramAssociationSection.class);
-        logger.debug(builder.toString());
+        return builder.toString();
     }
 }

@@ -2,6 +2,8 @@ package com.excellence.ggz.libparsetsstream.descriptor;
 
 import java.util.List;
 
+import static java.lang.Integer.toHexString;
+
 /**
  * @author ggz
  * @date 2021/3/30

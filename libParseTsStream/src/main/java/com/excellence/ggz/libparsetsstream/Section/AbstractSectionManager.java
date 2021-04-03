@@ -3,6 +3,8 @@ package com.excellence.ggz.libparsetsstream.Section;
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
+import org.apache.log4j.Logger;
+
 import static com.excellence.ggz.libparsetsstream.Packet.PacketManager.PACKET_LENGTH_204;
 
 /**
@@ -105,7 +107,8 @@ public abstract class AbstractSectionManager {
             }
 
             if (mSection != null) {
-                mSection.toPrint();
+                Logger logger = Logger.getLogger(AbstractSectionManager.class);
+                logger.debug(mSection.toString());
                 if (mSection.getRemainLength() == 0) {
                     parseSection(mSection);
                 }

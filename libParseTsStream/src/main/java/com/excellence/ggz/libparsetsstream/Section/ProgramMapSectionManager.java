@@ -3,8 +3,12 @@ package com.excellence.ggz.libparsetsstream.Section;
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
+import org.apache.log4j.Logger;
+
 import java.util.Observable;
 import java.util.Observer;
+
+import static java.lang.Integer.toHexString;
 
 /**
  * @author ggz
@@ -18,6 +22,7 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     }
 
     private int mFilterPid;
+    private Logger mLogger = Logger.getLogger(ProgramMapSectionManager.class);
 
     public ProgramMapSectionManager(int filterPid) {
         this.mFilterPid = filterPid;
@@ -25,14 +30,17 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
 
     @Override
     public void parseSection(Section section) {
-        section.toPrint();
+        mLogger.debug("\n[PMS] parse Section");
+        mLogger.debug(section.toString());
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
+        Logger logger = Logger.getLogger(ProgramMapSectionManager.class);
+        logger.debug("\n[PMS] get packet");
         if (packet.getPid() == mFilterPid) {
-            packet.toPrint();
+            logger.debug("\n[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
             assembleSection(PMT_TABLE_ID, packet);
         }
     }

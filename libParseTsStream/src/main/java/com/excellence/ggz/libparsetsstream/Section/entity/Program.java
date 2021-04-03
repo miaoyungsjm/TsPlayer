@@ -30,11 +30,9 @@ public class Program {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("------\n")
-                .append("[Program] programNumber: 0x").append(toHexString(programNumber)).append("\n")
-                .append("[Program] networkId: 0x").append(toHexString(networkId)).append("\n")
-                .append("[Program] programMapPid: 0x").append(toHexString(programMapPid)).append("\n");
-        return builder.toString();
+        return "------\n" +
+                "[Program] programNumber: 0x" + toHexString(programNumber) + "\n" +
+                "[Program] networkId: 0x" + toHexString(networkId) + "\n" +
+                "[Program] programMapPid: 0x" + toHexString(programMapPid) + "\n";
     }
 }

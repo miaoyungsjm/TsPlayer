@@ -1,5 +1,7 @@
 package com.excellence.ggz.libparsetsstream.descriptor;
 
+import static java.lang.Integer.toHexString;
+
 /**
  * @author ggz
  * @date 2021/3/30
@@ -64,12 +66,12 @@ public class ServiceDescriptor extends Descriptor {
 
     @Override
     public String toString() {
-        return "[ServiceDescriptorData] descriptorTag: 0x" + descriptorTag + "\n" +
-                "[ServiceDescriptorData] descriptorLength: 0x" + descriptorLength + "\n" +
-                "[ServiceDescriptorData] serviceType: 0x" + serviceType + "\n" +
-                "[ServiceDescriptorData] serviceProviderNameLength: 0x" + serviceProviderNameLength + "\n" +
-                "[ServiceDescriptorData] serviceProviderName: " + new String(serviceProviderName) + "\n" +
-                "[ServiceDescriptorData] serviceNameLength: 0x" + serviceNameLength + "\n" +
-                "[ServiceDescriptorData] serviceName: " + new String(serviceName) + "\n";
+        return "[ServiceDescriptor] descriptorTag: 0x" + toHexString(descriptorTag) + "\n" +
+                "[ServiceDescriptor] descriptorLength: 0x" + toHexString(descriptorLength) + "\n" +
+                "[ServiceDescriptor] serviceType: 0x" + toHexString(serviceType) + "\n" +
+                "[ServiceDescriptor] serviceProviderNameLength: 0x" + toHexString(serviceProviderNameLength) + "\n" +
+                "[ServiceDescriptor] serviceProviderName: " + new String(serviceProviderName) + "\n" +
+                "[ServiceDescriptor] serviceNameLength: 0x" + toHexString(serviceNameLength) + "\n" +
+                "[ServiceDescriptor] serviceName: " + new String(serviceName) + "\n";
     }
 }

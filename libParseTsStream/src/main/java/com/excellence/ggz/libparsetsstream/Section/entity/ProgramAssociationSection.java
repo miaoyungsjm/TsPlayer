@@ -2,6 +2,7 @@ package com.excellence.ggz.libparsetsstream.Section.entity;
 
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.toHexString;
@@ -59,23 +60,22 @@ public class ProgramAssociationSection extends Section {
     }
 
     @Override
-    public void toPrint() {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("\n")
-                .append("[PAT] tableId: 0x").append(toHexString(tableId)).append("\n")
-                .append("[PAT] sectionSyntaxIndicator: 0x").append(toHexString(sectionSyntaxIndicator)).append("\n")
-                .append("[PAT] sectionLength: 0x").append(toHexString(sectionLength)).append("\n")
-                .append("[PAT] transportStreamId: 0x").append(toHexString(transportStreamId)).append("\n")
-                .append("[PAT] versionNumber: 0x").append(toHexString(versionNumber)).append("\n")
-                .append("[PAT] currentNextIndicator: 0x").append(toHexString(currentNextIndicator)).append("\n")
-                .append("[PAT] sectionNumber: 0x").append(toHexString(sectionNumber)).append("\n")
-                .append("[PAT] lastSectionNumber: 0x").append(toHexString(lastSectionNumber)).append("\n")
-                .append("[PAT] programList: \n");
+        String pat = "\n" +
+                "[PAT] tableId: 0x" + toHexString(tableId) + "\n" +
+                "[PAT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
+                "[PAT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +
+                "[PAT] transportStreamId: 0x" + toHexString(transportStreamId) + "\n" +
+                "[PAT] versionNumber: 0x" + toHexString(versionNumber) + "\n" +
+                "[PAT] currentNextIndicator: 0x" + toHexString(currentNextIndicator) + "\n" +
+                "[PAT] sectionNumber: 0x" + toHexString(sectionNumber) + "\n" +
+                "[PAT] lastSectionNumber: 0x" + toHexString(lastSectionNumber) + "\n" +
+                "[PAT] programList: \n";
+        builder.append(pat);
         for (Program program : programList) {
             builder.append(program.toString());
         }
-
-        Logger logger = Logger.getLogger(ProgramAssociationSection.class);
-        logger.debug(builder.toString());
+        return builder.toString();
     }
 }
