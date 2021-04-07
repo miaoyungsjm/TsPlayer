@@ -1,6 +1,11 @@
 package com.excellence.ggz.libparsetsstream.Section.entity;
 
+import com.excellence.ggz.libparsetsstream.descriptor.Descriptor;
+import com.excellence.ggz.libparsetsstream.descriptor.DescriptorManager;
 import com.excellence.ggz.libparsetsstream.descriptor.ServiceDescriptor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Integer.toHexString;
 
@@ -9,6 +14,8 @@ import static java.lang.Integer.toHexString;
  * @date 2021/3/30
  */
 public class Service {
+    private static final int SERVICE_HEADER = 5;
+
     private int serviceId;
     private int eitScheduleFlag;
     private int eitPresentFollowingFlag;
@@ -16,6 +23,35 @@ public class Service {
     private int freeCaMode;
     private int descriptorsLoopLength;
     private ServiceDescriptor serviceDescriptor;
+
+    public static List<Service> newInstanceList(byte[] buff) {
+        List<Service> serviceList = new ArrayList<>();
+        int i = 0;
+        while (i < buff.length) {
+            int serviceId = (((buff[i] & 0xFF) << 8) | (buff[1 + i] & 0xFF)) & 0xFFFF;
+            int eitScheduleFollowingFlag = (buff[2 + i] >> 1) & 0x1;
+            int eitPresentFollowingFlag = (buff[2 + i]) & 0x1;
+            int runningStatus = (buff[3 + i] >> 5) & 0x7;
+            int freeCaMode = (buff[3 + i] >> 4) & 0x1;
+            int descriptorLoopLength = (((buff[3 + i] & 0xF) << 4) | (buff[4 + i] & 0xFF)) & 0xFFF;
+
+            byte[] descriptorBuff = new byte[descriptorLoopLength];
+            System.arraycopy(buff, i + SERVICE_HEADER,
+                    descriptorBuff, 0, descriptorLoopLength);
+            List<Descriptor> descriptorList = Descriptor.newInstanceList(descriptorBuff);
+            DescriptorManager descriptorManager = DescriptorManager.getInstance();
+            ServiceDescriptor serviceDescriptor =
+                    (ServiceDescriptor) descriptorManager.parseDescriptor(descriptorList.get(0));
+
+            Service service = new Service(serviceId, eitScheduleFollowingFlag, eitPresentFollowingFlag,
+                    runningStatus, freeCaMode, descriptorLoopLength, serviceDescriptor);
+            serviceList.add(service);
+
+            int oneService = SERVICE_HEADER + descriptorLoopLength;
+            i += oneService;
+        }
+        return serviceList;
+    }
 
     public Service(int serviceId, int eitScheduleFlag, int eitPresentFollowingFlag,
                    int runningStatus, int freeCaMode, int descriptorsLoopLength,

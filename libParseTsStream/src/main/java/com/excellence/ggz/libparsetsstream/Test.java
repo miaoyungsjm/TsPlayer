@@ -3,8 +3,10 @@ package com.excellence.ggz.libparsetsstream;
 import com.excellence.ggz.libparsetsstream.Packet.PacketManager;
 import com.excellence.ggz.libparsetsstream.Section.AbstractSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager;
+import com.excellence.ggz.libparsetsstream.Section.ProgramMapSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
+import com.excellence.ggz.libparsetsstream.Section.entity.ProgramMapSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 import com.excellence.ggz.libparsetsstream.Section.entity.ServiceDescriptionSection;
 
@@ -17,6 +19,7 @@ import org.apache.log4j.SimpleLayout;
 
 import java.io.IOException;
 
+import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
 import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
 
 public class Test {
@@ -24,11 +27,11 @@ public class Test {
     private static final String INPUT_FILE2_PATH = "f:/bak/sx/tools/001.ts";
 
     public static void main(String[] args) throws IOException {
-        String inputFile = INPUT_FILE1_PATH;
+        String inputFile = INPUT_FILE2_PATH;
 
         final Logger root = Logger.getRootLogger();
         root.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
-        root.addAppender(new FileAppender(new SimpleLayout(),"ts.log"));
+        root.addAppender(new FileAppender(new SimpleLayout(), "ts.log"));
         root.setLevel(Level.DEBUG);
 
         final PacketManager packetManager = new PacketManager(inputFile);
@@ -44,19 +47,6 @@ public class Test {
                 root.debug(programAssociationSection.toString());
                 root.debug("\n[PAS] stop filter");
                 packetManager.deleteObserver(pasManager);
-
-//                List<ProgramMapSectionManager> pmsManagerList = new ArrayList<>();
-//                List<Program> programList = programAssociationSection.getProgramList();
-//                for (Program program : programList) {
-//                    int pmtPid = program.getProgramMapPid();
-//                    if (pmtPid > 0) {
-//                        // todo: modify filterPacketByPid to filter several pid packets at the same time
-//                        ProgramMapSectionManager pmsManager = ProgramMapSectionManager.getInstance(pmtPid);
-//                        pmsManagerList.add(pmsManager);
-//
-//                        packetManager.addFilterPid(pmtPid);
-//                    }
-//                }
             }
         });
 
@@ -71,9 +61,22 @@ public class Test {
             }
         });
 
+        // todo: for one PMT test
+        final ProgramMapSectionManager pmsManager = ProgramMapSectionManager.getInstance(0x100);
+        pmsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
+            @Override
+            public void onFinish(Section section) {
+                ProgramMapSection programMapSection = (ProgramMapSection) section;
+                root.debug(programMapSection.toString());
+                root.debug("\n[PMS] stop filter");
+                packetManager.deleteObserver(pmsManager);
+            }
+        });
+
         // start filter
         packetManager.addObserver(pasManager);
         packetManager.addObserver(sdsManager);
-        packetManager.filterPacketByPid(SDT_PID);
+        packetManager.addObserver(pmsManager);
+        packetManager.filterPacketByPid(PAT_PID | SDT_PID | 0x100);
     }
 }

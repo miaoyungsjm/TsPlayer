@@ -73,14 +73,14 @@ public class PacketManager extends Observable {
                 }
             }
             bis.close();
-            mLogger.debug("read size: " + fileIndex);
+            mLogger.debug("[matchPacketLength] read size: " + fileIndex);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
-        mLogger.debug("elapsed time: " + elapsedTime);
+        mLogger.debug("[matchPacketLength] elapsed time: " + elapsedTime);
     }
 
     private boolean matchMethod(int fileIndex, int matchPacketLen, HashMap<Integer, MatchPosition> hashMap) {
@@ -169,7 +169,10 @@ public class PacketManager extends Observable {
                             mLogger.debug("[filterPacketByPid] error: transport_error_indicator == 1");
                             continue;
                         }
-                        if (packet.getPid() == PAT_PID | packet.getPid() == SDT_PID) {
+
+                        // todo: for test to filter pids
+                        if (packet.getPid() == PAT_PID || packet.getPid() == SDT_PID
+                                || packet.getPid() == 0x100) {
                             // observable - observer
                             postNewPacket(packet);
                         }
@@ -186,7 +189,7 @@ public class PacketManager extends Observable {
 
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
-        mLogger.debug("elapsed time: " + elapsedTime);
+        mLogger.debug("[filterPacketByPid] elapsed time: " + elapsedTime);
     }
 
     private void postNewPacket(Packet packet) {

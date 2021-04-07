@@ -1,5 +1,8 @@
 package com.excellence.ggz.libparsetsstream.descriptor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Integer.toHexString;
 
 /**
@@ -17,6 +20,22 @@ public class Descriptor {
         byte[] descriptorBuff = new byte[descriptorLength];
         System.arraycopy(buff, 2, descriptorBuff, 0, descriptorLength);
         return new Descriptor(descriptorTag, descriptorLength, descriptorBuff);
+    }
+
+    public static List<Descriptor> newInstanceList(byte[] buff) {
+        List<Descriptor> descriptorList = new ArrayList<>();
+        int i = 0;
+        while (i < buff.length) {
+            int descriptorTag = buff[i] & 0xFF;
+            int descriptorLength = buff[1 + i] & 0xFF;
+            byte[] descriptorBuff = new byte[descriptorLength];
+            System.arraycopy(buff, 2 + i, descriptorBuff, 0, descriptorLength);
+            Descriptor descriptor = new Descriptor(descriptorTag, descriptorLength, descriptorBuff);
+            descriptorList.add(descriptor);
+            int oneDescriptor = 2 + descriptorLength;
+            i += oneDescriptor;
+        }
+        return descriptorList;
     }
 
     public Descriptor(int descriptorTag, int descriptorLength, byte[] descriptorBuff) {
@@ -51,9 +70,8 @@ public class Descriptor {
 
     @Override
     public String toString() {
-
         StringBuilder builder = new StringBuilder();
-        String descriptor = "\n" +
+        String descriptor = "------\n" +
                 "[Descriptor] descriptorTag: 0x" + toHexString(descriptorTag) + "\n" +
                 "[Descriptor] descriptorLength: 0x" + toHexString(descriptorLength) + "\n" +
                 "[Descriptor] descriptorBuff: \n";
@@ -65,6 +83,7 @@ public class Descriptor {
                 builder.append("\n");
             }
         }
+        builder.append("\n");
         return builder.toString();
     }
 }

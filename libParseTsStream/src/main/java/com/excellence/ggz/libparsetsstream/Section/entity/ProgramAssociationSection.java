@@ -1,8 +1,5 @@
 package com.excellence.ggz.libparsetsstream.Section.entity;
 
-import org.apache.log4j.Logger;
-
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.toHexString;
