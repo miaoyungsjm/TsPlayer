@@ -47,6 +47,8 @@ public class Test {
                 root.debug(programAssociationSection.toString());
                 root.debug("\n[PAS] stop filter");
                 packetManager.deleteObserver(pasManager);
+                packetManager.removeFilterPid(PAT_PID);
+                packetManager.addFilterPid(0x100);
             }
         });
 
@@ -58,6 +60,7 @@ public class Test {
                 root.debug(serviceDescriptionSection.toString());
                 root.debug("\n[SDS] stop filter");
                 packetManager.deleteObserver(sdsManager);
+                packetManager.removeFilterPid(SDT_PID);
             }
         });
 
@@ -70,13 +73,18 @@ public class Test {
                 root.debug(programMapSection.toString());
                 root.debug("\n[PMS] stop filter");
                 packetManager.deleteObserver(pmsManager);
+                packetManager.removeFilterPid(0x100);
             }
         });
 
-        // start filter
+        // add Observer
         packetManager.addObserver(pasManager);
         packetManager.addObserver(sdsManager);
         packetManager.addObserver(pmsManager);
-        packetManager.filterPacketByPid(PAT_PID | SDT_PID | 0x100);
+
+        // start filter
+        packetManager.addFilterPid(PAT_PID);
+        packetManager.addFilterPid(SDT_PID);
+        packetManager.filterPacketByPid();
     }
 }

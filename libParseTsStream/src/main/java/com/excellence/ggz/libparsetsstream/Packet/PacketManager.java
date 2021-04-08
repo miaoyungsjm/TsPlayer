@@ -6,11 +6,11 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
-
-import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
-import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
 
 /**
  * @author ggz
@@ -28,6 +28,7 @@ public class PacketManager extends Observable {
     private String mInputFilePath;
     private int mPacketStartPosition = -1;
     private int mPacketLength = -1;
+    private List<Integer> mFilterPidList = new ArrayList<>();
 
     public PacketManager(String inputFilePath) {
         this.mInputFilePath = inputFilePath;
@@ -143,7 +144,7 @@ public class PacketManager extends Observable {
         return mPacketStartPosition;
     }
 
-    public void filterPacketByPid(int inputPid) {
+    public void filterPacketByPid() {
         long startTime = System.currentTimeMillis();
 
         int packetLength = getPacketLength();
@@ -170,11 +171,11 @@ public class PacketManager extends Observable {
                             continue;
                         }
 
-                        // todo: for test to filter pids
-                        if (packet.getPid() == PAT_PID || packet.getPid() == SDT_PID
-                                || packet.getPid() == 0x100) {
-                            // observable - observer
-                            postNewPacket(packet);
+                        for (int j = 0; j < mFilterPidList.size(); j++) {
+                            if (packet.getPid() == mFilterPidList.get(j)) {
+                                // observable - observer
+                                postNewPacket(packet);
+                            }
                         }
                     } else {
                         mLogger.debug("[filterPacketByPid] error: stream is unstable" +
@@ -200,5 +201,17 @@ public class PacketManager extends Observable {
     }
 
     public void addFilterPid(int pid) {
+        mFilterPidList.add(pid);
+    }
+
+    public void removeFilterPid(int pid) {
+        // fix ConcurrentModificationException
+        Iterator<Integer> it = mFilterPidList.iterator();
+        while (it.hasNext()) {
+            Integer integer = it.next();
+            if (integer == pid) {
+                it.remove();
+            }
+        }
     }
 }
