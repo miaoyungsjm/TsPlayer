@@ -8,6 +8,8 @@ import com.excellence.ggz.libparsetsstream.descriptor.Descriptor;
 
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,21 +25,30 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     private static final int PMS_SECTION_HEADER = 9;
     private static final int CRC_32 = 4;
 
-    public static ProgramMapSectionManager getInstance(int filterPid) {
-        return new ProgramMapSectionManager(filterPid);
+    private static volatile ProgramMapSectionManager sInstance = null;
+
+    private Logger mLogger = Logger.getLogger(ProgramMapSectionManager.class);
+    private List<Integer> mFilterPidList = new ArrayList<>();
+
+    public static ProgramMapSectionManager getInstance() {
+        if (sInstance == null) {
+            synchronized (ProgramMapSectionManager.class) {
+                if (sInstance == null) {
+                    sInstance = new ProgramMapSectionManager();
+                }
+            }
+        }
+        return sInstance;
     }
 
-    private int mFilterPid;
-    private Logger mLogger = Logger.getLogger(ProgramMapSectionManager.class);
-
-    public ProgramMapSectionManager(int filterPid) {
-        this.mFilterPid = filterPid;
+    private ProgramMapSectionManager() {
     }
 
     @Override
     public void parseSection(Section section) {
         mLogger.debug("\n[PMS] parse Section");
 
+        int pid = section.getPid();
         int tableId = section.getTableId();
         int sectionSyntaxIndicator = section.getSectionSyntaxIndicator();
         int sectionLength = section.getSectionLength();
@@ -64,15 +75,33 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
         List<Component> componentList = Component.newInstanceList(componentBuff);
 
         ProgramMapSection pms = new ProgramMapSection(
-                tableId, sectionSyntaxIndicator, sectionLength, buff,
-                programNumber, versionNumber, currentNextIndicator,
-                sectionNumber, lastSectionNumber, pcrPid,
-                programInfoLength, programInfoDescriptorList,
-                componentList, crc32);
+                pid, tableId, sectionSyntaxIndicator, sectionLength,
+                buff, programNumber, versionNumber, currentNextIndicator,
+                sectionNumber, lastSectionNumber, pcrPid, programInfoLength,
+                programInfoDescriptorList, componentList, crc32);
 
         if (mParseListener != null) {
             mParseListener.onFinish(pms);
         }
+    }
+
+    public void addFilterPid(int pid) {
+        mFilterPidList.add(pid);
+    }
+
+    public void removeFilterPid(int pid) {
+        // fix ConcurrentModificationException
+        Iterator<Integer> it = mFilterPidList.iterator();
+        while (it.hasNext()) {
+            Integer integer = it.next();
+            if (integer == pid) {
+                it.remove();
+            }
+        }
+    }
+
+    public List<Integer> getFilterPidList() {
+        return mFilterPidList;
     }
 
     @Override
@@ -80,9 +109,12 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
         Packet packet = (Packet) arg;
         Logger logger = Logger.getLogger(ProgramMapSectionManager.class);
         logger.debug("\n[PMS] get packet");
-        if (packet.getPid() == mFilterPid) {
-            logger.debug("\n[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
-            assembleSection(PMT_TABLE_ID, packet);
+
+        for (int i = 0; i < mFilterPidList.size(); i++) {
+            if (packet.getPid() == mFilterPidList.get(i)) {
+                logger.debug("\n[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
+                assembleSection(PMT_TABLE_ID, packet);
+            }
         }
     }
 }

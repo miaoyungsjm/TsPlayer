@@ -5,6 +5,8 @@ import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
+
 import static com.excellence.ggz.libparsetsstream.Packet.PacketManager.PACKET_LENGTH_204;
 
 /**
@@ -18,17 +20,19 @@ public abstract class AbstractSectionManager {
     private static final int CRC_16 = 16;
     private static final int CONTINUITY_COUNTER_MAXIMUM = 0xF;
 
-    private Section mSection = null;
-    private int mNextContinuityCounter = -1;
+    private HashMap<Integer, Section> mSectionMap = new HashMap<>();
 
     public OnParseListener mParseListener = null;
 
     public void assembleSection(int inputTableId, Packet packet) {
         int packetLength = packet.getPacketLength();
+        int pid = packet.getPid();
         int adaptationFieldControl = packet.getAdaptationFieldControl();
         int payloadUnitStartIndicator = packet.getPayloadUnitStartIndicator();
         int continuityCounter = packet.getContinuityCounter();
         byte[] payLoad = packet.getPayLoad();
+
+        Section section = mSectionMap.get(pid);
 
         if (adaptationFieldControl == AF_STATUS_PAYLOAD_ONLY) {
             if (payloadUnitStartIndicator == 1) {
@@ -63,21 +67,19 @@ public abstract class AbstractSectionManager {
                         remainLength = 0;
                     }
 
-                    mNextContinuityCounter = continuityCounter + 1;
-                    if (mNextContinuityCounter > CONTINUITY_COUNTER_MAXIMUM) {
-                        mNextContinuityCounter = 0;
-                    }
-                    mSection = new Section(tableId, sectionSyntaxIndicator, sectionLength, buff);
-                    mSection.setRemainLength(remainLength);
+                    section = new Section(pid, tableId, sectionSyntaxIndicator, sectionLength, buff);
+                    section.setRemainLength(remainLength);
+
+                    mSectionMap.put(pid, section);
                 }
             } else {
-                if (mSection == null || continuityCounter != mNextContinuityCounter) {
+                if (section == null) {
                     return;
                 }
 
-                int sectionLength = mSection.getSectionLength();
-                int remainLength = mSection.getRemainLength();
-                byte[] sectionBuff = mSection.getSectionBuff();
+                int sectionLength = section.getSectionLength();
+                int remainLength = section.getRemainLength();
+                byte[] sectionBuff = section.getSectionBuff();
 
                 // the maximum value of section length in one packet
                 int effectiveSectionLength;
@@ -99,18 +101,14 @@ public abstract class AbstractSectionManager {
                     remainLength = 0;
                 }
 
-                mNextContinuityCounter = continuityCounter + 1;
-                if (mNextContinuityCounter > CONTINUITY_COUNTER_MAXIMUM) {
-                    mNextContinuityCounter = 0;
-                }
-                mSection.setRemainLength(remainLength);
+                section.setRemainLength(remainLength);
             }
 
-            if (mSection != null) {
+            if (section != null) {
                 Logger logger = Logger.getLogger(AbstractSectionManager.class);
-                logger.debug(mSection.toString());
-                if (mSection.getRemainLength() == 0) {
-                    parseSection(mSection);
+                logger.debug(section.toString());
+                if (section.getRemainLength() == 0) {
+                    parseSection(section);
                 }
             }
         } else {

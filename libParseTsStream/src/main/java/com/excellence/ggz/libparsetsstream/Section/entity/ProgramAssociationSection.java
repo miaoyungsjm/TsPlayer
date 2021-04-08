@@ -14,11 +14,11 @@ public class ProgramAssociationSection extends Section {
     private List<Program> programList;
     private byte[] crc32;
 
-    public ProgramAssociationSection(int tableId, int sectionSyntaxIndicator, int sectionLength,
+    public ProgramAssociationSection(int pid, int tableId, int sectionSyntaxIndicator, int sectionLength,
                                      byte[] sectionBuff, int transportStreamId, int versionNumber,
                                      int currentNextIndicator, int sectionNumber, int lastSectionNumber,
                                      List<Program> programList, byte[] crc32) {
-        super(tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
+        super(pid, tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
         this.transportStreamId = transportStreamId;
         this.versionNumber = versionNumber;
         this.currentNextIndicator = currentNextIndicator;
@@ -60,6 +60,7 @@ public class ProgramAssociationSection extends Section {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String pat = "\n" +
+                "[PAT] pid: 0x" + toHexString(pid) + "\n" +
                 "[PAT] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[PAT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[PAT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

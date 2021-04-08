@@ -19,11 +19,11 @@ public class ServiceDescriptionSection extends Section {
     private List<Service> serviceList;
     private byte[] crc32;
 
-    public ServiceDescriptionSection(int tableId, int sectionSyntaxIndicator, int sectionLength,
+    public ServiceDescriptionSection(int pid, int tableId, int sectionSyntaxIndicator, int sectionLength,
                                      byte[] sectionBuff, int transportStreamId, int versionNumber,
                                      int currentNextIndicator, int sectionNumber, int lastSectionNumber,
                                      int originalNetworkId, List<Service> serviceList, byte[] crc32) {
-        super(tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
+        super(pid, tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
         this.transportStreamId = transportStreamId;
         this.versionNumber = versionNumber;
         this.currentNextIndicator = currentNextIndicator;
@@ -102,6 +102,7 @@ public class ServiceDescriptionSection extends Section {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String sdt = "\n" +
+                "[SDT] pid: 0x" + toHexString(pid) + "\n" +
                 "[SDT] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[SDT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[SDT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

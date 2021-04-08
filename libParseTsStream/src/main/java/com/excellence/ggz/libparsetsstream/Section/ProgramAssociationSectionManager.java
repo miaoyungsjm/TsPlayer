@@ -43,6 +43,7 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     public void parseSection(Section section) {
         mLogger.debug("\n[PAS] parse Section");
 
+        int pid = section.getPid();
         int tableId = section.getTableId();
         int sectionSyntaxIndicator = section.getSectionSyntaxIndicator();
         int sectionLength = section.getSectionLength();
@@ -62,8 +63,8 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
         List<Program> programList = Program.newInstanceList(programBuff);
 
         ProgramAssociationSection pas = new ProgramAssociationSection(
-                tableId, sectionSyntaxIndicator, sectionLength, buff,
-                transportStreamId, versionNumber, currentNextIndicator,
+                pid, tableId, sectionSyntaxIndicator, sectionLength,
+                buff, transportStreamId, versionNumber, currentNextIndicator,
                 sectionNumber, lastSectionNumber, programList, crc32);
 
         if (mParseListener != null) {

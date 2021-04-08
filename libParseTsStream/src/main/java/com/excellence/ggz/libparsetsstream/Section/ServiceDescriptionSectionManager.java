@@ -43,6 +43,7 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     public void parseSection(Section section) {
         mLogger.debug("\n[SDS] parse Section");
 
+        int pid = section.getPid();
         int tableId = section.getTableId();
         int sectionSyntaxIndicator = section.getSectionSyntaxIndicator();
         int sectionLength = section.getSectionLength();
@@ -63,10 +64,10 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
         List<Service> serviceList = Service.newInstanceList(serviceBuff);
 
         ServiceDescriptionSection sds = new ServiceDescriptionSection(
-                tableId, sectionSyntaxIndicator, sectionLength, buff,
-                transportStreamId, versionNumber, currentNextIndicator,
-                sectionNumber, lastSectionNumber, originalNetworkId,
-                serviceList, crc32);
+                pid, tableId, sectionSyntaxIndicator, sectionLength,
+                buff, transportStreamId, versionNumber, currentNextIndicator,
+                sectionNumber, lastSectionNumber, originalNetworkId, serviceList,
+                crc32);
 
         if (mParseListener != null) {
             mParseListener.onFinish(sds);

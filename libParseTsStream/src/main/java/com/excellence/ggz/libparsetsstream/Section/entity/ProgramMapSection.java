@@ -23,12 +23,12 @@ public class ProgramMapSection extends Section {
     private List<Component> componentList;
     private byte[] crc32;
 
-    public ProgramMapSection(int tableId, int sectionSyntaxIndicator, int sectionLength, byte[] sectionBuff,
-                             int programNumber, int versionNumber, int currentNextIndicator,
-                             int sectionNumber, int lastSectionNumber, int pcrPid,
-                             int programInfoLength, List<Descriptor> programInfoDescriptorList,
-                             List<Component> componentList, byte[] crc32) {
-        super(tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
+    public ProgramMapSection(int pid, int tableId, int sectionSyntaxIndicator, int sectionLength,
+                             byte[] sectionBuff, int programNumber, int versionNumber, int currentNextIndicator,
+                             int sectionNumber, int lastSectionNumber, int pcrPid, int programInfoLength,
+                             List<Descriptor> programInfoDescriptorList, List<Component> componentList,
+                             byte[] crc32) {
+        super(pid, tableId, sectionSyntaxIndicator, sectionLength, sectionBuff);
         this.programNumber = programNumber;
         this.versionNumber = versionNumber;
         this.currentNextIndicator = currentNextIndicator;
@@ -125,6 +125,7 @@ public class ProgramMapSection extends Section {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String pmt = "\n" +
+                "[PMT] pid: 0x" + toHexString(pid) + "\n" +
                 "[PMT] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[PMT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[PMT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

@@ -8,6 +8,7 @@ import static java.lang.Integer.toHexString;
  */
 public class Section {
 
+    public int pid;
     public int tableId;
     public int sectionSyntaxIndicator;
     public int sectionLength;
@@ -15,11 +16,17 @@ public class Section {
 
     private int remainLength;
 
-    public Section(int tableId, int sectionSyntaxIndicator, int sectionLength, byte[] sectionBuff) {
+    public Section(int pid, int tableId, int sectionSyntaxIndicator,
+                   int sectionLength, byte[] sectionBuff) {
+        this.pid = pid;
         this.tableId = tableId;
         this.sectionSyntaxIndicator = sectionSyntaxIndicator;
         this.sectionLength = sectionLength;
         this.sectionBuff = sectionBuff;
+    }
+
+    public int getPid() {
+        return pid;
     }
 
     public int getTableId() {
@@ -50,6 +57,7 @@ public class Section {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         String section = "\n" +
+                "[Section] pid: 0x" + toHexString(pid) + "\n" +
                 "[Section] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[Section] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[Section] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

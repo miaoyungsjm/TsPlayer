@@ -5,6 +5,7 @@ import com.excellence.ggz.libparsetsstream.Section.AbstractSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramMapSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager;
+import com.excellence.ggz.libparsetsstream.Section.entity.Program;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramMapSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
@@ -18,16 +19,18 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.SimpleLayout;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
 import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
+import static java.lang.Integer.toHexString;
 
 public class Test {
     private static final String INPUT_FILE1_PATH = "/Users/miaoyun/Documents/ts_file/001.ts";
     private static final String INPUT_FILE2_PATH = "f:/bak/sx/tools/001.ts";
 
     public static void main(String[] args) throws IOException {
-        String inputFile = INPUT_FILE2_PATH;
+        String inputFile = INPUT_FILE1_PATH;
 
         final Logger root = Logger.getRootLogger();
         root.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
@@ -35,10 +38,27 @@ public class Test {
         root.setLevel(Level.DEBUG);
 
         final PacketManager packetManager = new PacketManager(inputFile);
-        final int packetLength = packetManager.getPacketLength();
+        int packetLength = packetManager.getPacketLength();
         int packetStartPosition = packetManager.getPacketStartPosition();
 
         // observable - observer
+        final ProgramMapSectionManager pmsManager = ProgramMapSectionManager.getInstance();
+        pmsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
+            @Override
+            public void onFinish(Section section) {
+                ProgramMapSection programMapSection = (ProgramMapSection) section;
+                root.debug(programMapSection.toString());
+
+                int pmtPid = programMapSection.getPid();
+                root.debug("\n[PMS] stop filter pid: 0x" + toHexString(pmtPid));
+                packetManager.removeFilterPid(pmtPid);
+                pmsManager.removeFilterPid(pmtPid);
+                if (pmsManager.getFilterPidList().size() == 0) {
+                    packetManager.deleteObserver(pmsManager);
+                }
+            }
+        });
+
         final ProgramAssociationSectionManager pasManager = ProgramAssociationSectionManager.getInstance();
         pasManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
             @Override
@@ -46,9 +66,18 @@ public class Test {
                 ProgramAssociationSection programAssociationSection = (ProgramAssociationSection) section;
                 root.debug(programAssociationSection.toString());
                 root.debug("\n[PAS] stop filter");
-                packetManager.deleteObserver(pasManager);
                 packetManager.removeFilterPid(PAT_PID);
-                packetManager.addFilterPid(0x100);
+                packetManager.deleteObserver(pasManager);
+
+                List<Program> programList = programAssociationSection.getProgramList();
+                for (Program program : programList) {
+                    int programNumber = program.getProgramNumber();
+                    int pmtPid = program.getProgramMapPid();
+                    if (programNumber > 0) {
+                        packetManager.addFilterPid(pmtPid);
+                        pmsManager.addFilterPid(pmtPid);
+                    }
+                }
             }
         });
 
@@ -59,23 +88,11 @@ public class Test {
                 ServiceDescriptionSection serviceDescriptionSection = (ServiceDescriptionSection) section;
                 root.debug(serviceDescriptionSection.toString());
                 root.debug("\n[SDS] stop filter");
-                packetManager.deleteObserver(sdsManager);
                 packetManager.removeFilterPid(SDT_PID);
+                packetManager.deleteObserver(sdsManager);
             }
         });
 
-        // todo: for one PMT test
-        final ProgramMapSectionManager pmsManager = ProgramMapSectionManager.getInstance(0x100);
-        pmsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
-            @Override
-            public void onFinish(Section section) {
-                ProgramMapSection programMapSection = (ProgramMapSection) section;
-                root.debug(programMapSection.toString());
-                root.debug("\n[PMS] stop filter");
-                packetManager.deleteObserver(pmsManager);
-                packetManager.removeFilterPid(0x100);
-            }
-        });
 
         // add Observer
         packetManager.addObserver(pasManager);

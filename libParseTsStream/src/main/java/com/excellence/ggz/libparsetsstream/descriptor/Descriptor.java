@@ -71,8 +71,7 @@ public class Descriptor {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String descriptor = "------\n" +
-                "[Descriptor] descriptorTag: 0x" + toHexString(descriptorTag) + "\n" +
+        String descriptor = "[Descriptor] descriptorTag: 0x" + toHexString(descriptorTag) + "\n" +
                 "[Descriptor] descriptorLength: 0x" + toHexString(descriptorLength) + "\n" +
                 "[Descriptor] descriptorBuff: \n";
         builder.append(descriptor);
