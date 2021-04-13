@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.excellence.ggz.parsetsplayer.data_source.DataSourceViewModel" />
+
+        <variable
+            name="adapter"
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/data_source_actionbar_rl_height"
+            android:background="@color/data_source_actionbar_bg_red">
+
+            <ImageView
+                android:id="@+id/iv_data_source_actionbar_back"
+                android:layout_width="@dimen/data_source_actionbar_back_iv_width"
+                android:layout_height="@dimen/data_source_actionbar_back_iv_height"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_micro_little"
+                android:src="@mipmap/ic_back"
+                android:visibility="gone" />
+
+            <com.excellence.ggz.parsetsplayer.view.RobotoMediumTextView
+                android:id="@+id/tv_data_source_actionbar_module_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/data_source_tv_module_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_micro" />
+        </RelativeLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/srl_data_source_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            app:srlAccentColor="@color/white"
+            app:srlEnablePreviewInEditMode="true"
+            app:srlPrimaryColor="@color/data_source_popup_bg_grey">
+
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_data_source_file_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </LinearLayout>
+</layout>

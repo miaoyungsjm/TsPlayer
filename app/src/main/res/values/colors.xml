@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- data source -->
+    <color name="data_source_actionbar_bg_red">#D42020</color>
+    <color name="data_source_popup_bg_grey">#404040</color>
 </resources>

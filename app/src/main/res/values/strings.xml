@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ParseTsPlayer</string>
+
+    <string name="data_source_tv_module_name">Select TS File</string>
 </resources>
