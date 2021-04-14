@@ -10,7 +10,7 @@
 
         <variable
             name="adapter"
-            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+            type="com.excellence.ggz.parsetsplayer.adater.CommonRvAdapter" />
     </data>
 
     <LinearLayout
@@ -57,8 +57,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_data_source_file_list"
+                adapter="@{adapter}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </LinearLayout>
 </layout>

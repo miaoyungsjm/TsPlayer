@@ -2,4 +2,6 @@
     <string name="app_name">ParseTsPlayer</string>
 
     <string name="data_source_tv_module_name">Select TS File</string>
+    <string name="data_source_tips_request_permission_successful">Request device permission successful</string>
+    <string name="data_source_tips_request_permission_failed">Request device permission failed</string>
 </resources>

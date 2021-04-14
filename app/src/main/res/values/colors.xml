@@ -11,4 +11,6 @@
     <!-- data source -->
     <color name="data_source_actionbar_bg_red">#D42020</color>
     <color name="data_source_popup_bg_grey">#404040</color>
+    <color name="data_source_item_text_black">#1c1a1a</color>
+    <color name="data_source_item_line_grey">#d9d9d9</color>
 </resources>

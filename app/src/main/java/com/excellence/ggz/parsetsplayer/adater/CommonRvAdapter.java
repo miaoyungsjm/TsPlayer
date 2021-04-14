@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.excellence.ggz.parsetsplayer.BR;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +18,13 @@ import java.util.List;
  * @author ggz
  * @date 2020/11/3
  */
-public class CommonAdapter<T extends ViewDataBinding> extends RecyclerView.Adapter<CommonAdapter.ViewHolder<T>> {
+public class CommonRvAdapter<E, T extends ViewDataBinding> extends RecyclerView.Adapter<CommonRvAdapter.ViewHolder<T>> {
 
-    private int mLayoutId;
+    private final int mLayoutId;
     private OnItemClickListener mListener;
-    private List<String> mDataList = new ArrayList<>();
+    private List<E> mDataList = new ArrayList<>();
 
-    public CommonAdapter(int layoutId) {
+    public CommonRvAdapter(int layoutId) {
         this.mLayoutId = layoutId;
     }
 
@@ -37,7 +39,7 @@ public class CommonAdapter<T extends ViewDataBinding> extends RecyclerView.Adapt
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
                 if (mListener != null) {
-                    mListener.onItemClick();
+                    mListener.onItemClick(position);
                 }
             }
         });
@@ -46,9 +48,9 @@ public class CommonAdapter<T extends ViewDataBinding> extends RecyclerView.Adapt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder<T> holder, int position) {
-        String entity = mDataList.get(position);
-        if (entity != null) {
-//            holder.binding.setVariable(BR.common, entity);
+        if (position < mDataList.size()) {
+            E entity = mDataList.get(position);
+            holder.binding.setVariable(BR.common, entity);
         }
     }
 
@@ -66,7 +68,7 @@ public class CommonAdapter<T extends ViewDataBinding> extends RecyclerView.Adapt
         }
     }
 
-    public void setDataList(List<String> list) {
+    public void setDataList(List<E> list) {
         mDataList = list;
         notifyDataSetChanged();
     }

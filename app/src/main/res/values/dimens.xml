@@ -54,24 +54,19 @@
     <dimen name="text_size_small_micro">20sp</dimen>
     <dimen name="text_size_micro">18sp</dimen>
     <dimen name="text_size_micro_micro">16sp</dimen>
-    <dimen name="text_size_micro_super">13sp</dimen>
+    <dimen name="text_size_micro_super">14sp</dimen>
 
 
     <!-- data source -->
     <dimen name="data_source_actionbar_rl_height">45dp</dimen>
     <dimen name="data_source_actionbar_back_iv_width">12dp</dimen>
     <dimen name="data_source_actionbar_back_iv_height">21dp</dimen>
+    <dimen name="data_source_item_cl_height">56dp</dimen>
+    <dimen name="data_source_item_icon_iv_width">24dp</dimen>
+    <dimen name="data_source_item_icon_iv_height">20dp</dimen>
+    <dimen name="data_source_item_arrow_iv_width">10dp</dimen>
+    <dimen name="data_source_item_arrow_iv_height">16dp</dimen>
 
-
-
-
-    <dimen name="select_file_item_rl_height">56dp</dimen>
-    <dimen name="select_file_item_rl_margin">24dp</dimen>
-    <dimen name="select_file_item_file_ic_iv_width">24dp</dimen>
-    <dimen name="select_file_item_file_ic_iv_height">20dp</dimen>
-    <dimen name="select_file_item_arrow_right_iv_width">10dp</dimen>
-    <dimen name="select_file_item_arrow_right_iv_height">16dp</dimen>
-    <dimen name="select_file_item_text_size">14sp</dimen>
     <dimen name="select_file_popup_window_iv_width">48dp</dimen>
     <dimen name="select_file_popup_window_iv_height">48dp</dimen>
 

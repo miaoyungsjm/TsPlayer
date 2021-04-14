@@ -5,5 +5,5 @@ package com.excellence.ggz.parsetsplayer.adater;
  * @date 2020/10/28
  */
 public interface OnItemClickListener {
-    void onItemClick();
+    void onItemClick(int position);
 }
