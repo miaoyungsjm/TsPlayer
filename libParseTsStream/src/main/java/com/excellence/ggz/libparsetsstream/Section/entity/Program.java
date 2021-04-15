@@ -15,6 +15,7 @@ public class Program {
     private int programNumber;
     private int networkId;
     private int programMapPid;
+    private String programName = "";
 
     public static List<Program> newInstanceList(byte[] buff) {
         List<Program> programList = new ArrayList<>();
@@ -51,11 +52,16 @@ public class Program {
         return programMapPid;
     }
 
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
     @Override
     public String toString() {
         return "------\n" +
                 "[Program] programNumber: 0x" + toHexString(programNumber) + "\n" +
                 "[Program] networkId: 0x" + toHexString(networkId) + "\n" +
-                "[Program] programMapPid: 0x" + toHexString(programMapPid) + "\n";
+                "[Program] programMapPid: 0x" + toHexString(programMapPid) + "\n" +
+                "[Program] programName: " + programName + "\n";
     }
 }
