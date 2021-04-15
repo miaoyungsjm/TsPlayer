@@ -10,7 +10,11 @@
 
         <variable
             name="adapter"
-            type="com.excellence.ggz.parsetsplayer.adater.CommonRvAdapter" />
+            type="androidx.recyclerview.widget.RecyclerView.Adapter" />
+
+        <variable
+            name="listener"
+            type="com.scwang.smartrefresh.layout.listener.OnRefreshListener" />
     </data>
 
     <LinearLayout
@@ -44,6 +48,9 @@
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/srl_data_source_refresh_layout"
+            autoRefresh="@{vm.autoRefresh}"
+            finishRefresh="@{vm.refreshStatus}"
+            refreshListener="@{listener}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
@@ -58,6 +65,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_data_source_file_list"
                 adapter="@{adapter}"
+                submitList="@{vm.dataSource}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

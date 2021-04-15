@@ -1,7 +1,5 @@
 package com.excellence.ggz.parsetsplayer.data_source;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -27,12 +25,13 @@ public class DataSourceViewModel extends ViewModel {
     private static final String TAG = DataSourceViewModel.class.getSimpleName();
 
     private final CompositeDisposable mCompositeDisposable;
-    private final List<DataSource> mDataSourceList;
+    private final List<DataSource> mDataSourceList = new ArrayList<>();
 
-    private final MutableLiveData<List<DataSource>> mDataSourceLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<DataSource>> mDataSource = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mAutoRefresh = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mRefreshStatus = new MutableLiveData<>();
 
     public DataSourceViewModel() {
-        mDataSourceList = new ArrayList<>();
         mCompositeDisposable = new CompositeDisposable();
     }
 
@@ -41,26 +40,26 @@ public class DataSourceViewModel extends ViewModel {
             @Override
             public void subscribe(@NonNull ObservableEmitter<Boolean> emitter) throws Exception {
                 mDataSourceList.clear();
-                traverseTsFile(path);
-                for (DataSource dataSource : mDataSourceList) {
-                    Log.d(TAG, dataSource.toString());
-                }
-                emitter.onNext(true);
+                Boolean aBoolean = traverseTsFile(path);
+                emitter.onNext(aBoolean);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
-                mDataSourceLiveData.setValue(mDataSourceList);
+                mRefreshStatus.setValue(aBoolean);
+                if (aBoolean) {
+                    mDataSource.setValue(mDataSourceList);
+                }
             }
         });
         mCompositeDisposable.add(disposable);
     }
 
-    private void traverseTsFile(String path) {
+    private boolean traverseTsFile(String path) {
         File dir = new File(path);
         File[] files = dir.listFiles();
         if (files == null) {
-            return;
+            return false;
         }
         for (File file : files) {
             if (file.isDirectory()) {
@@ -76,6 +75,7 @@ public class DataSourceViewModel extends ViewModel {
                 }
             }
         }
+        return true;
     }
 
     @Override
@@ -84,7 +84,15 @@ public class DataSourceViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public MutableLiveData<List<DataSource>> getDataSourceLiveData() {
-        return mDataSourceLiveData;
+    public MutableLiveData<List<DataSource>> getDataSource() {
+        return mDataSource;
+    }
+
+    public MutableLiveData<Integer> getAutoRefresh() {
+        return mAutoRefresh;
+    }
+
+    public MutableLiveData<Boolean> getRefreshStatus() {
+        return mRefreshStatus;
     }
 }

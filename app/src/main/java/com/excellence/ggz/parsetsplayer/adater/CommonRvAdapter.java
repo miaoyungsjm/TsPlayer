@@ -21,7 +21,7 @@ import java.util.List;
 public class CommonRvAdapter<E, T extends ViewDataBinding> extends RecyclerView.Adapter<CommonRvAdapter.ViewHolder<T>> {
 
     private final int mLayoutId;
-    private OnItemClickListener mListener;
+    private OnItemClickListener<E> mListener;
     private List<E> mDataList = new ArrayList<>();
 
     public CommonRvAdapter(int layoutId) {
@@ -39,7 +39,7 @@ public class CommonRvAdapter<E, T extends ViewDataBinding> extends RecyclerView.
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
                 if (mListener != null) {
-                    mListener.onItemClick(position);
+                    mListener.onItemClick(mDataList.get(position));
                 }
             }
         });
@@ -73,7 +73,7 @@ public class CommonRvAdapter<E, T extends ViewDataBinding> extends RecyclerView.
         notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener<E> listener) {
         mListener = listener;
     }
 }
