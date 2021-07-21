@@ -59,15 +59,6 @@ public class CommonRvAdapter<E, T extends ViewDataBinding> extends RecyclerView.
         return mDataList.size();
     }
 
-    static class ViewHolder<T extends ViewDataBinding> extends RecyclerView.ViewHolder {
-        T binding;
-
-        public ViewHolder(T binding) {
-            super(binding.getRoot());
-            this.binding = binding;
-        }
-    }
-
     public void setDataList(List<E> list) {
         mDataList = list;
         notifyDataSetChanged();
@@ -75,5 +66,14 @@ public class CommonRvAdapter<E, T extends ViewDataBinding> extends RecyclerView.
 
     public void setOnItemClickListener(OnItemClickListener<E> listener) {
         mListener = listener;
+    }
+
+    static class ViewHolder<T extends ViewDataBinding> extends RecyclerView.ViewHolder {
+        T binding;
+
+        public ViewHolder(T binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
     }
 }

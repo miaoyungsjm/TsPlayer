@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 
 import com.excellence.ggz.parsetsplayer.BR;
 import com.excellence.ggz.parsetsplayer.R;
+import com.excellence.ggz.parsetsplayer.adater.DataSourceAdapter;
 import com.excellence.ggz.parsetsplayer.adater.OnItemClickListener;
 import com.excellence.ggz.parsetsplayer.base.BaseActivity;
 import com.kunminx.architecture.ui.page.DataBindingConfig;

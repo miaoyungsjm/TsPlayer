@@ -19,7 +19,7 @@ public abstract class BaseListAdapter<E, B extends ViewDataBinding> extends List
 
     private OnItemClickListener<E> mListener;
 
-    protected BaseListAdapter(@NonNull DiffUtil.ItemCallback diffCallback) {
+    protected BaseListAdapter(@NonNull DiffUtil.ItemCallback<E> diffCallback) {
         super(diffCallback);
     }
 
@@ -51,6 +51,10 @@ public abstract class BaseListAdapter<E, B extends ViewDataBinding> extends List
         return super.getItemViewType(position);
     }
 
+    public void setOnItemClickListener(OnItemClickListener<E> listener) {
+        mListener = listener;
+    }
+
     protected abstract int getLayoutResId(int viewType);
 
     protected abstract void onBindItem(ViewHolder<B> holder, E entity);
@@ -62,9 +66,5 @@ public abstract class BaseListAdapter<E, B extends ViewDataBinding> extends List
             super(binding.getRoot());
             this.binding = binding;
         }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener<E> listener) {
-        mListener = listener;
     }
 }

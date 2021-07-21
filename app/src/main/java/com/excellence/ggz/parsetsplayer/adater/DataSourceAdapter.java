@@ -1,14 +1,11 @@
-package com.excellence.ggz.parsetsplayer.data_source;
-
-import android.widget.Toast;
+package com.excellence.ggz.parsetsplayer.adater;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.excellence.ggz.parsetsplayer.BR;
 import com.excellence.ggz.parsetsplayer.R;
-import com.excellence.ggz.parsetsplayer.adater.BaseListAdapter;
-import com.excellence.ggz.parsetsplayer.adater.OnItemClickListener;
+import com.excellence.ggz.parsetsplayer.data_source.DataSource;
 import com.excellence.ggz.parsetsplayer.databinding.DataSourceItemBinding;
 
 /**
@@ -17,7 +14,7 @@ import com.excellence.ggz.parsetsplayer.databinding.DataSourceItemBinding;
  */
 public class DataSourceAdapter extends BaseListAdapter<DataSource, DataSourceItemBinding> {
 
-    protected DataSourceAdapter() {
+    public DataSourceAdapter() {
         super(new DiffUtil.ItemCallback<DataSource>() {
             @Override
             public boolean areItemsTheSame(@NonNull DataSource oldItem, @NonNull DataSource newItem) {
