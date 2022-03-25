@@ -17,10 +17,13 @@ import com.excellence.ggz.libparsetsstream.Section.entity.Service;
 import com.excellence.ggz.libparsetsstream.Section.entity.ServiceDescriptionSection;
 
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.apache.log4j.SimpleLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +61,11 @@ public class TsManager {
 
     private TsManager() {
         mLogger.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
-//        root.addAppender(new FileAppender(new SimpleLayout(), "ts.log"));
+        try {
+            mLogger.addAppender(new FileAppender(new SimpleLayout(), "ts.log"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mLogger.setLevel(Level.DEBUG);
     }
 
@@ -79,7 +86,7 @@ public class TsManager {
                     int pmtPid = program.getProgramMapPid();
                     if (programNumber > 0) {
                         mPacketManager.addFilterPid(pmtPid);
-                        mPacketManager.addFilterPid(pmtPid);
+                        mPmsManager.addFilterPid(pmtPid);
                     }
                 }
             }
