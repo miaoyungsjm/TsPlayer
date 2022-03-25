@@ -1,5 +1,9 @@
 package com.excellence.ggz.libparsetsstream;
 
+import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
+import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
+import static java.lang.Integer.toHexString;
+
 import com.excellence.ggz.libparsetsstream.Packet.PacketManager;
 import com.excellence.ggz.libparsetsstream.Section.AbstractSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager;
@@ -20,10 +24,6 @@ import org.apache.log4j.PatternLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager.PAT_PID;
-import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
-import static java.lang.Integer.toHexString;
-
 /**
  * @author ggz
  * @date 2021/3/30
@@ -36,16 +36,14 @@ public class TsManager {
     private int mPacketStartPosition;
     private ProgramAssociationSection mPat;
     private ServiceDescriptionSection mSdt;
-    private List<ProgramMapSection> mPmtList = new ArrayList<>();
+    private final List<ProgramMapSection> mPmtList = new ArrayList<>();
     private List<Program> mProgramList = new ArrayList<>();
+    private PacketManager mPacketManager;
+    private ProgramAssociationSectionManager mPasManager;
+    private ProgramMapSectionManager mPmsManager;
+    private ServiceDescriptionSectionManager mSdsManager;
 
     private final Logger mLogger = Logger.getRootLogger();
-
-    private TsManager() {
-        mLogger.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
-//        root.addAppender(new FileAppender(new SimpleLayout(), "ts.log"));
-        mLogger.setLevel(Level.DEBUG);
-    }
 
     public static TsManager getInstance() {
         if (sInstance == null) {
@@ -58,14 +56,47 @@ public class TsManager {
         return sInstance;
     }
 
-    public void parseTsFile(String filePath) {
-        final PacketManager packetManager = new PacketManager(filePath);
-        mPacketLength = packetManager.getPacketLength();
-        mPacketStartPosition = packetManager.getPacketStartPosition();
+    private TsManager() {
+        mLogger.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
+//        root.addAppender(new FileAppender(new SimpleLayout(), "ts.log"));
+        mLogger.setLevel(Level.DEBUG);
+    }
 
-        // observable - observer
-        final ProgramMapSectionManager pmsManager = ProgramMapSectionManager.getInstance();
-        pmsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
+    private void initCallBack() {
+        mPasManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
+            @Override
+            public void onFinish(Section section) {
+                mPat = (ProgramAssociationSection) section;
+                mLogger.debug(mPat.toString());
+                mLogger.debug("\n[PAS] stop filter");
+                mPacketManager.removeFilterPid(PAT_PID);
+                mPacketManager.deleteObserver(mPasManager);
+
+                mPmtList.clear();
+                List<Program> programList = mPat.getProgramList();
+                for (Program program : programList) {
+                    int programNumber = program.getProgramNumber();
+                    int pmtPid = program.getProgramMapPid();
+                    if (programNumber > 0) {
+                        mPacketManager.addFilterPid(pmtPid);
+                        mPacketManager.addFilterPid(pmtPid);
+                    }
+                }
+            }
+        });
+
+        mSdsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
+            @Override
+            public void onFinish(Section section) {
+                mSdt = (ServiceDescriptionSection) section;
+                mLogger.debug(mSdt.toString());
+                mLogger.debug("\n[SDS] stop filter");
+                mPacketManager.removeFilterPid(SDT_PID);
+                mPacketManager.deleteObserver(mSdsManager);
+            }
+        });
+
+        mPmsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
             @Override
             public void onFinish(Section section) {
                 ProgramMapSection programMapSection = (ProgramMapSection) section;
@@ -74,59 +105,42 @@ public class TsManager {
 
                 int pmtPid = programMapSection.getPid();
                 mLogger.debug("\n[PMS] stop filter pid: 0x" + toHexString(pmtPid));
-                packetManager.removeFilterPid(pmtPid);
-                pmsManager.removeFilterPid(pmtPid);
-                if (pmsManager.getFilterPidList().size() == 0) {
-                    packetManager.deleteObserver(pmsManager);
+                mPacketManager.removeFilterPid(pmtPid);
+                mPmsManager.removeFilterPid(pmtPid);
+                if (mPmsManager.getFilterPidList().size() == 0) {
+                    mPacketManager.deleteObserver(mPmsManager);
                 }
             }
         });
+    }
 
-        final ProgramAssociationSectionManager pasManager = ProgramAssociationSectionManager.getInstance();
-        pasManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
-            @Override
-            public void onFinish(Section section) {
-                mPat = (ProgramAssociationSection) section;
-                mLogger.debug(mPat.toString());
-                mLogger.debug("\n[PAS] stop filter");
-                packetManager.removeFilterPid(PAT_PID);
-                packetManager.deleteObserver(pasManager);
+    public void parseTsFile(String filePath) {
+        mPacketManager = new PacketManager(filePath);
+        mPacketLength = mPacketManager.getPacketLength();
+        mPacketStartPosition = mPacketManager.getPacketStartPosition();
 
-                mPmtList.clear();
-                List<Program> programList = mPat.getProgramList();
-                for (Program program : programList) {
-                    int programNumber = program.getProgramNumber();
-                    int pmtPid = program.getProgramMapPid();
-                    if (programNumber > 0) {
-                        packetManager.addFilterPid(pmtPid);
-                        pmsManager.addFilterPid(pmtPid);
-                    }
-                }
-            }
-        });
-
-        final ServiceDescriptionSectionManager sdsManager = ServiceDescriptionSectionManager.getInstance();
-        sdsManager.setOnParseListener(new AbstractSectionManager.OnParseListener() {
-            @Override
-            public void onFinish(Section section) {
-                mSdt = (ServiceDescriptionSection) section;
-                mLogger.debug(mSdt.toString());
-                mLogger.debug("\n[SDS] stop filter");
-                packetManager.removeFilterPid(SDT_PID);
-                packetManager.deleteObserver(sdsManager);
-            }
-        });
-
+        mPasManager = ProgramAssociationSectionManager.getInstance();
+        mSdsManager = ServiceDescriptionSectionManager.getInstance();
+        mPmsManager = ProgramMapSectionManager.getInstance();
+        initCallBack();
 
         // add Observer
-        packetManager.addObserver(pasManager);
-        packetManager.addObserver(sdsManager);
-        packetManager.addObserver(pmsManager);
+        mPacketManager.addObserver(mPasManager);
+        mPacketManager.addObserver(mSdsManager);
+        mPacketManager.addObserver(mPmsManager);
 
         // start filter
-        packetManager.addFilterPid(PAT_PID);
-        packetManager.addFilterPid(SDT_PID);
-        packetManager.filterPacketByPid();
+        mPacketManager.addFilterPid(PAT_PID);
+        mPacketManager.addFilterPid(SDT_PID);
+        mPacketManager.filterPacketByPid();
+    }
+
+    public int getPacketLength() {
+        return mPacketLength;
+    }
+
+    public int getPacketStartPosition() {
+        return mPacketStartPosition;
     }
 
     public List<Program> getProgramList() {
