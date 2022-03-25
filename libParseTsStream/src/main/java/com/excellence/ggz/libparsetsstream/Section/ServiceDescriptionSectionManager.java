@@ -1,5 +1,7 @@
 package com.excellence.ggz.libparsetsstream.Section;
 
+import static java.lang.Integer.toHexString;
+
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 import com.excellence.ggz.libparsetsstream.Section.entity.Service;
@@ -78,7 +80,8 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         Logger logger = Logger.getLogger(ServiceDescriptionSectionManager.class);
-        logger.debug("\n[SDS] get packet");
+        logger.debug("\n[SDS] get packet pid: 0x" + toHexString(packet.getPid()));
+
         if (packet.getPid() == SDT_PID) {
             logger.debug("\n[SDS] assembleSection");
             assembleSection(SDT_TABLE_ID, packet);

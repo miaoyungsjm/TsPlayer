@@ -108,7 +108,7 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         Logger logger = Logger.getLogger(ProgramMapSectionManager.class);
-        logger.debug("\n[PMS] get packet");
+        logger.debug("\n[PMS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         for (int i = 0; i < mFilterPidList.size(); i++) {
             if (packet.getPid() == mFilterPidList.get(i)) {

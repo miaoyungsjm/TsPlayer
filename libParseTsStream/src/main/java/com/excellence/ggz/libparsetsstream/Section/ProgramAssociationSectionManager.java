@@ -1,5 +1,7 @@
 package com.excellence.ggz.libparsetsstream.Section;
 
+import static java.lang.Integer.toHexString;
+
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Program;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
@@ -75,7 +77,8 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
-        mLogger.debug("\n[PAS] get packet");
+        mLogger.debug("\n[PAS] get packet pid: 0x" + toHexString(packet.getPid()));
+
         if (packet.getPid() == PAT_PID) {
             mLogger.debug("\n[PAS] assembleSection");
             assembleSection(PAT_TABLE_ID, packet);
