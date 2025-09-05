@@ -10,7 +10,7 @@ import org.apache.log4j.SimpleLayout;
 import java.io.IOException;
 
 public class LoggerManager {
-    private static final String LOGGER_OUTPUT_PATTERN = "%r [%t] %p %l %m%n";
+    private static final String LOGGER_OUTPUT_PATTERN = "%r [%p] %t - %c %m%n";
     private static final String LOGGER_OUTPUT_FILE = "ts.log";
 
     private static class LoggerManagerHolder {
@@ -32,8 +32,8 @@ public class LoggerManager {
         }
     }
 
-    public void debug(String moduleName, String msg) {
-        Logger logger = Logger.getLogger(moduleName);
+    public void debug(String className, String msg) {
+        Logger logger = Logger.getLogger(className);
         logger.debug(msg);
     }
 }
