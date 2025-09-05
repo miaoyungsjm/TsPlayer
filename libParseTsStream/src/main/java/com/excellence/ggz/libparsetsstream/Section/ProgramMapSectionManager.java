@@ -1,12 +1,11 @@
 package com.excellence.ggz.libparsetsstream.Section;
 
+import com.excellence.ggz.libparsetsstream.Logger.LoggerManager;
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Component;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramMapSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 import com.excellence.ggz.libparsetsstream.descriptor.Descriptor;
-
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +26,6 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
 
     private static volatile ProgramMapSectionManager sInstance = null;
 
-    private Logger mLogger = Logger.getLogger(ProgramMapSectionManager.class);
     private List<Integer> mFilterPidList = new ArrayList<>();
 
     public static ProgramMapSectionManager getInstance() {
@@ -46,7 +44,8 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
 
     @Override
     public void parseSection(Section section) {
-        mLogger.debug("\n[PMS] parse Section");
+        mLogger.debug(ProgramMapSectionManager.class.getName(),
+                "\n[PMS] parse Section");
 
         int pid = section.getPid();
         int tableId = section.getTableId();
@@ -107,12 +106,13 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
-        Logger logger = Logger.getLogger(ProgramMapSectionManager.class);
-        logger.debug("\n[PMS] get packet pid: 0x" + toHexString(packet.getPid()));
+        mLogger.debug(ProgramMapSectionManager.class.getName(),
+                "\n[PMS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         for (int i = 0; i < mFilterPidList.size(); i++) {
             if (packet.getPid() == mFilterPidList.get(i)) {
-                logger.debug("\n[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
+                mLogger.debug(ProgramMapSectionManager.class.getName(),
+                        "\n[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
                 assembleSection(PMT_TABLE_ID, packet);
             }
         }

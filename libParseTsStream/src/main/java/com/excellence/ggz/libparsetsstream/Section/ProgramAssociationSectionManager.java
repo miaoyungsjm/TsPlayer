@@ -7,8 +7,6 @@ import com.excellence.ggz.libparsetsstream.Section.entity.Program;
 import com.excellence.ggz.libparsetsstream.Section.entity.ProgramAssociationSection;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 
-import org.apache.log4j.Logger;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,8 +22,6 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     private static final int CRC_32 = 4;
 
     private static volatile ProgramAssociationSectionManager sInstance = null;
-
-    private Logger mLogger = Logger.getLogger(ProgramAssociationSectionManager.class);
 
     private ProgramAssociationSectionManager() {
     }
@@ -43,7 +39,8 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
 
     @Override
     public void parseSection(Section section) {
-        mLogger.debug("\n[PAS] parse Section");
+        mLogger.debug(ProgramAssociationSectionManager.class.getName(),
+                "\n[PAS] parse Section");
 
         int pid = section.getPid();
         int tableId = section.getTableId();
@@ -77,10 +74,12 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
-        mLogger.debug("\n[PAS] get packet pid: 0x" + toHexString(packet.getPid()));
+        mLogger.debug(ProgramAssociationSectionManager.class.getName(),
+                "\n[PAS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         if (packet.getPid() == PAT_PID) {
-            mLogger.debug("\n[PAS] assembleSection");
+            mLogger.debug(ProgramAssociationSectionManager.class.getName(),
+                    "\n[PAS] assembleSection");
             assembleSection(PAT_TABLE_ID, packet);
         }
     }

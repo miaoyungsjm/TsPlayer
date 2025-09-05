@@ -1,13 +1,14 @@
 package com.excellence.ggz.libparsetsstream.Section;
 
+import com.excellence.ggz.libparsetsstream.Logger.LoggerManager;
 import com.excellence.ggz.libparsetsstream.Packet.Packet;
 import com.excellence.ggz.libparsetsstream.Section.entity.Section;
-
-import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 
 import static com.excellence.ggz.libparsetsstream.Packet.PacketManager.PACKET_LENGTH_204;
+
+import jdk.internal.net.http.common.Log;
 
 /**
  * @author ggz
@@ -23,6 +24,8 @@ public abstract class AbstractSectionManager {
     private HashMap<Integer, Section> mSectionMap = new HashMap<>();
 
     public OnParseListener mParseListener = null;
+
+    public final LoggerManager mLogger = LoggerManager.getInstance();
 
     public void assembleSection(int inputTableId, Packet packet) {
         int packetLength = packet.getPacketLength();
@@ -105,8 +108,8 @@ public abstract class AbstractSectionManager {
             }
 
             if (section != null) {
-                Logger logger = Logger.getLogger(AbstractSectionManager.class);
-                logger.debug(section.toString());
+                mLogger.debug(AbstractSectionManager.class.getName(),
+                        section.toString());
                 if (section.getRemainLength() == 0) {
                     parseSection(section);
                 }

@@ -4,6 +4,7 @@ import static com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSect
 import static com.excellence.ggz.libparsetsstream.Section.ServiceDescriptionSectionManager.SDT_PID;
 import static java.lang.Integer.toHexString;
 
+import com.excellence.ggz.libparsetsstream.Logger.LoggerManager;
 import com.excellence.ggz.libparsetsstream.Packet.PacketManager;
 import com.excellence.ggz.libparsetsstream.Section.AbstractSectionManager;
 import com.excellence.ggz.libparsetsstream.Section.ProgramAssociationSectionManager;
@@ -16,14 +17,6 @@ import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 import com.excellence.ggz.libparsetsstream.Section.entity.Service;
 import com.excellence.ggz.libparsetsstream.Section.entity.ServiceDescriptionSection;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.SimpleLayout;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +39,7 @@ public class TsManager {
     private ProgramMapSectionManager mPmsManager;
     private ServiceDescriptionSectionManager mSdsManager;
 
-    private final Logger mLogger = Logger.getRootLogger();
+    private final LoggerManager mLogger;
 
     public static TsManager getInstance() {
         if (sInstance == null) {
@@ -60,13 +53,7 @@ public class TsManager {
     }
 
     private TsManager() {
-        mLogger.addAppender(new ConsoleAppender(new PatternLayout("%r [%t] %p %l %m%n")));
-        try {
-            mLogger.addAppender(new FileAppender(new SimpleLayout(), "ts.log"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mLogger.setLevel(Level.DEBUG);
+        mLogger = LoggerManager.getInstance();
     }
 
     private void initCallBack() {
@@ -74,8 +61,8 @@ public class TsManager {
             @Override
             public void onFinish(Section section) {
                 mPat = (ProgramAssociationSection) section;
-                mLogger.debug(mPat.toString());
-                mLogger.debug("\n[PAS] stop filter");
+                mLogger.debug(TsManager.class.getName(), mPat.toString());
+                mLogger.debug(TsManager.class.getName(), "\n[PAS] stop filter");
                 mPacketManager.removeFilterPid(PAT_PID);
                 mPacketManager.deleteObserver(mPasManager);
 
@@ -96,8 +83,8 @@ public class TsManager {
             @Override
             public void onFinish(Section section) {
                 mSdt = (ServiceDescriptionSection) section;
-                mLogger.debug(mSdt.toString());
-                mLogger.debug("\n[SDS] stop filter");
+                mLogger.debug(TsManager.class.getName(), mSdt.toString());
+                mLogger.debug(TsManager.class.getName(), "\n[SDS] stop filter");
                 mPacketManager.removeFilterPid(SDT_PID);
                 mPacketManager.deleteObserver(mSdsManager);
             }
@@ -107,11 +94,11 @@ public class TsManager {
             @Override
             public void onFinish(Section section) {
                 ProgramMapSection programMapSection = (ProgramMapSection) section;
-                mLogger.debug(programMapSection.toString());
+                mLogger.debug(TsManager.class.getName(), programMapSection.toString());
                 mPmtList.add(programMapSection);
 
                 int pmtPid = programMapSection.getPid();
-                mLogger.debug("\n[PMS] stop filter pid: 0x" + toHexString(pmtPid));
+                mLogger.debug(TsManager.class.getName(), "\n[PMS] stop filter pid: 0x" + toHexString(pmtPid));
                 mPacketManager.removeFilterPid(pmtPid);
                 mPmsManager.removeFilterPid(pmtPid);
                 if (mPmsManager.getFilterPidList().size() == 0) {

@@ -7,8 +7,6 @@ import com.excellence.ggz.libparsetsstream.Section.entity.Section;
 import com.excellence.ggz.libparsetsstream.Section.entity.Service;
 import com.excellence.ggz.libparsetsstream.Section.entity.ServiceDescriptionSection;
 
-import org.apache.log4j.Logger;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -24,8 +22,6 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     private static final int CRC_32 = 4;
 
     private static volatile ServiceDescriptionSectionManager sInstance = null;
-
-    private Logger mLogger = Logger.getLogger(ServiceDescriptionSectionManager.class);
 
     private ServiceDescriptionSectionManager() {
     }
@@ -43,7 +39,8 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
 
     @Override
     public void parseSection(Section section) {
-        mLogger.debug("\n[SDS] parse Section");
+        mLogger.debug(ServiceDescriptionSectionManager.class.getName(),
+                "\n[SDS] parse Section");
 
         int pid = section.getPid();
         int tableId = section.getTableId();
@@ -79,11 +76,12 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     @Override
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
-        Logger logger = Logger.getLogger(ServiceDescriptionSectionManager.class);
-        logger.debug("\n[SDS] get packet pid: 0x" + toHexString(packet.getPid()));
+        mLogger.debug(ServiceDescriptionSectionManager.class.getName(),
+                "\n[SDS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         if (packet.getPid() == SDT_PID) {
-            logger.debug("\n[SDS] assembleSection");
+            mLogger.debug(ServiceDescriptionSectionManager.class.getName(),
+                    "\n[SDS] assembleSection");
             assembleSection(SDT_TABLE_ID, packet);
         }
     }

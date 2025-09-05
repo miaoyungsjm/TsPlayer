@@ -1,9 +1,5 @@
 package com.excellence.ggz.libparsetsstream.Packet;
 
-import org.apache.log4j.Logger;
-
-import java.util.Arrays;
-
 import static java.lang.Integer.toHexString;
 
 /**
