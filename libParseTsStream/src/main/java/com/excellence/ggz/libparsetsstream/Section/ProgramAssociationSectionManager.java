@@ -40,7 +40,7 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     @Override
     public void parseSection(Section section) {
         mLogger.debug(ProgramAssociationSectionManager.class.getName(),
-                "\n[PAS] parse Section");
+                "[PAS] parse Section");
 
         int pid = section.getPid();
         int tableId = section.getTableId();
@@ -75,11 +75,11 @@ public class ProgramAssociationSectionManager extends AbstractSectionManager imp
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         mLogger.debug(ProgramAssociationSectionManager.class.getName(),
-                "\n[PAS] get packet pid: 0x" + toHexString(packet.getPid()));
+                "[PAS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         if (packet.getPid() == PAT_PID) {
             mLogger.debug(ProgramAssociationSectionManager.class.getName(),
-                    "\n[PAS] assembleSection");
+                    "[PAS] assembleSection");
             assembleSection(PAT_TABLE_ID, packet);
         }
     }

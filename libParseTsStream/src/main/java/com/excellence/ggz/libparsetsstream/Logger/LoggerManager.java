@@ -10,7 +10,7 @@ import org.apache.log4j.SimpleLayout;
 import java.io.IOException;
 
 public class LoggerManager {
-    private static final String LOGGER_OUTPUT_PATTERN = "%r [%p] %t - %c %m%n";
+    private static final String LOGGER_OUTPUT_PATTERN = "%d [%p] %t - %m%n";
     private static final String LOGGER_OUTPUT_FILE = "ts.log";
 
     private static class LoggerManagerHolder {
@@ -21,19 +21,26 @@ public class LoggerManager {
         return LoggerManagerHolder.sInstance;
     }
 
+    private Logger mLogger;
+
     private LoggerManager() {
         try {
-            Logger logger = Logger.getRootLogger();
-            logger.addAppender(new ConsoleAppender(new PatternLayout(LOGGER_OUTPUT_PATTERN)));
-            logger.addAppender(new FileAppender(new SimpleLayout(), LOGGER_OUTPUT_FILE));
-            logger.setLevel(Level.DEBUG);
+            mLogger = Logger.getRootLogger();
+            mLogger.addAppender(new ConsoleAppender(new PatternLayout(LOGGER_OUTPUT_PATTERN)));
+            mLogger.addAppender(new FileAppender(new SimpleLayout(), LOGGER_OUTPUT_FILE));
+            mLogger.setLevel(Level.DEBUG);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void debug(String className, String msg) {
-        Logger logger = Logger.getLogger(className);
-        logger.debug(msg);
+        String str = className + ": \n" + msg;
+        mLogger.debug(str);
+    }
+
+    public void error(String className, String msg) {
+        String str = className + ": \n" + msg;
+        mLogger.error(str);
     }
 }

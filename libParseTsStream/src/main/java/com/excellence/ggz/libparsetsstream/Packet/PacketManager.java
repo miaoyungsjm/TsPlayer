@@ -75,7 +75,7 @@ public class PacketManager extends Observable {
             }
             bis.close();
             mLogger.debug(PacketManager.class.getName(),
-                    "\n[matchPacketLength] read size: " + fileIndex);
+                    "[matchPacketLength] read size: " + fileIndex);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,7 +83,7 @@ public class PacketManager extends Observable {
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
         mLogger.debug(PacketManager.class.getName(),
-                "\n[matchPacketLength] elapsed time: " + elapsedTime);
+                "[matchPacketLength] elapsed time: " + elapsedTime);
     }
 
     private boolean matchMethod(int fileIndex, int matchPacketLen, HashMap<Integer, MatchPosition> hashMap) {
@@ -102,8 +102,7 @@ public class PacketManager extends Observable {
                 mPacketStartPosition = startPosition;
                 mPacketLength = matchPacketLen;
                 StringBuilder builder = new StringBuilder();
-                builder.append("\n")
-                        .append("[matchMethod] ").append(matchPacketLen).append(" accumulator: ").append(accumulator).append("\n")
+                builder.append("[matchMethod] ").append(matchPacketLen).append(" accumulator: ").append(accumulator).append("\n")
                         .append("[matchMethod] ").append(matchPacketLen).append(" packetStartPosition: ").append(mPacketStartPosition).append("\n")
                         .append("[matchMethod] ").append(matchPacketLen).append(" packetLength: ").append(mPacketLength).append("\n");
                 mLogger.debug(PacketManager.class.getName(), builder.toString());
@@ -125,7 +124,7 @@ public class PacketManager extends Observable {
         }
         hashMap.put(curRelativePosition, matchPos);
 //        mLogger.debug(PacketManager.class.getName(),
-//                "\n[matchMethod] " + matchPacketLen + " fileIndex: " + fileIndex +
+//                "[matchMethod] " + matchPacketLen + " fileIndex: " + fileIndex +
 //                        ", relativePosition: " + curRelativePosition +
 //                        ", startPosition: " + matchPos.getStartPosition() +
 //                        ", intervalPosition: " + matchPos.getIntervalPosition() +
@@ -200,7 +199,7 @@ public class PacketManager extends Observable {
     }
 
     private void postNewPacket(Packet packet) {
-        mLogger.debug(PacketManager.class.getName(), "\n[PacketManager] post packet");
+        mLogger.debug(PacketManager.class.getName(), "[PacketManager] post packet");
         mLogger.debug(PacketManager.class.getName(), packet.toString());
         setChanged();
         notifyObservers(packet);

@@ -45,7 +45,7 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     @Override
     public void parseSection(Section section) {
         mLogger.debug(ProgramMapSectionManager.class.getName(),
-                "\n[PMS] parse Section");
+                "[PMS] parse Section");
 
         int pid = section.getPid();
         int tableId = section.getTableId();
@@ -107,12 +107,12 @@ public class ProgramMapSectionManager extends AbstractSectionManager implements 
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         mLogger.debug(ProgramMapSectionManager.class.getName(),
-                "\n[PMS] get packet pid: 0x" + toHexString(packet.getPid()));
+                "[PMS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         for (int i = 0; i < mFilterPidList.size(); i++) {
             if (packet.getPid() == mFilterPidList.get(i)) {
                 mLogger.debug(ProgramMapSectionManager.class.getName(),
-                        "\n[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
+                        "[PMS] assembleSection pid: 0x" + toHexString(packet.getPid()));
                 assembleSection(PMT_TABLE_ID, packet);
             }
         }

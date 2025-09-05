@@ -40,7 +40,7 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     @Override
     public void parseSection(Section section) {
         mLogger.debug(ServiceDescriptionSectionManager.class.getName(),
-                "\n[SDS] parse Section");
+                "[SDS] parse Section");
 
         int pid = section.getPid();
         int tableId = section.getTableId();
@@ -77,11 +77,11 @@ public class ServiceDescriptionSectionManager extends AbstractSectionManager imp
     public void update(Observable o, Object arg) {
         Packet packet = (Packet) arg;
         mLogger.debug(ServiceDescriptionSectionManager.class.getName(),
-                "\n[SDS] get packet pid: 0x" + toHexString(packet.getPid()));
+                "[SDS] get packet pid: 0x" + toHexString(packet.getPid()));
 
         if (packet.getPid() == SDT_PID) {
             mLogger.debug(ServiceDescriptionSectionManager.class.getName(),
-                    "\n[SDS] assembleSection");
+                    "[SDS] assembleSection");
             assembleSection(SDT_TABLE_ID, packet);
         }
     }

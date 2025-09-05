@@ -99,8 +99,7 @@ public class Packet {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String packet = "\n" +
-                "[Packet] syncByte: 0x" + toHexString(syncByte) + "\n" +
+        String packet = "[Packet] syncByte: 0x" + toHexString(syncByte) + "\n" +
                 "[Packet] transportErrorIndicator: 0x" + toHexString(transportErrorIndicator) + "\n" +
                 "[Packet] payloadUnitStartIndicator: 0x" + toHexString(payloadUnitStartIndicator) + "\n" +
                 "[Packet] transportPriority: 0x" + toHexString(transportPriority) + "\n" +

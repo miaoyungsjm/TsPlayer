@@ -124,8 +124,7 @@ public class ProgramMapSection extends Section {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String pmt = "\n" +
-                "[PMT] pid: 0x" + toHexString(pid) + "\n" +
+        String pmt = "[PMT] pid: 0x" + toHexString(pid) + "\n" +
                 "[PMT] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[PMT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[PMT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

@@ -56,8 +56,7 @@ public class Section {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String section = "\n" +
-                "[Section] pid: 0x" + toHexString(pid) + "\n" +
+        String section = "[Section] pid: 0x" + toHexString(pid) + "\n" +
                 "[Section] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[Section] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[Section] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

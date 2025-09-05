@@ -62,7 +62,7 @@ public class TsManager {
             public void onFinish(Section section) {
                 mPat = (ProgramAssociationSection) section;
                 mLogger.debug(TsManager.class.getName(), mPat.toString());
-                mLogger.debug(TsManager.class.getName(), "\n[PAS] stop filter");
+                mLogger.debug(TsManager.class.getName(), "[PAS] stop filter");
                 mPacketManager.removeFilterPid(PAT_PID);
                 mPacketManager.deleteObserver(mPasManager);
 
@@ -84,7 +84,7 @@ public class TsManager {
             public void onFinish(Section section) {
                 mSdt = (ServiceDescriptionSection) section;
                 mLogger.debug(TsManager.class.getName(), mSdt.toString());
-                mLogger.debug(TsManager.class.getName(), "\n[SDS] stop filter");
+                mLogger.debug(TsManager.class.getName(), "[SDS] stop filter");
                 mPacketManager.removeFilterPid(SDT_PID);
                 mPacketManager.deleteObserver(mSdsManager);
             }
@@ -98,7 +98,7 @@ public class TsManager {
                 mPmtList.add(programMapSection);
 
                 int pmtPid = programMapSection.getPid();
-                mLogger.debug(TsManager.class.getName(), "\n[PMS] stop filter pid: 0x" + toHexString(pmtPid));
+                mLogger.debug(TsManager.class.getName(), "[PMS] stop filter pid: 0x" + toHexString(pmtPid));
                 mPacketManager.removeFilterPid(pmtPid);
                 mPmsManager.removeFilterPid(pmtPid);
                 if (mPmsManager.getFilterPidList().size() == 0) {

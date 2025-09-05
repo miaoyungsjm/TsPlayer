@@ -123,8 +123,7 @@ public class Service {
 
     @Override
     public String toString() {
-        return "------\n" +
-                "[Service] serviceId: 0x" + toHexString(serviceId) + "\n" +
+        return "[Service] serviceId: 0x" + toHexString(serviceId) + "\n" +
                 "[Service] eitScheduleFlag: 0x" + toHexString(eitScheduleFlag) + "\n" +
                 "[Service] eitPresentFollowingFlag: 0x" + toHexString(eitPresentFollowingFlag) + "\n" +
                 "[Service] runningStatus: 0x" + toHexString(runningStatus) + "\n" +

@@ -59,8 +59,7 @@ public class ProgramAssociationSection extends Section {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String pat = "\n" +
-                "[PAT] pid: 0x" + toHexString(pid) + "\n" +
+        String pat = "[PAT] pid: 0x" + toHexString(pid) + "\n" +
                 "[PAT] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[PAT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[PAT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

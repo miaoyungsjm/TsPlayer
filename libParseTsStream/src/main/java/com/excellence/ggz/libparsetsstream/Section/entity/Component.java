@@ -82,8 +82,7 @@ public class Component {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String component = "------\n" +
-                "[Component] streamType: 0x" + toHexString(streamType) + "\n" +
+        String component = "[Component] streamType: 0x" + toHexString(streamType) + "\n" +
                 "[Component] elementaryPid: 0x" + toHexString(elementaryPid) + "\n" +
                 "[Component] esInfoLength: 0x" + toHexString(esInfoLength) + "\n" +
                 "[Component] esDescriptors: \n";

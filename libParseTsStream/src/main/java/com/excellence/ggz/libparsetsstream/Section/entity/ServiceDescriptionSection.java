@@ -101,8 +101,7 @@ public class ServiceDescriptionSection extends Section {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        String sdt = "\n" +
-                "[SDT] pid: 0x" + toHexString(pid) + "\n" +
+        String sdt = "[SDT] pid: 0x" + toHexString(pid) + "\n" +
                 "[SDT] tableId: 0x" + toHexString(tableId) + "\n" +
                 "[SDT] sectionSyntaxIndicator: 0x" + toHexString(sectionSyntaxIndicator) + "\n" +
                 "[SDT] sectionLength: 0x" + toHexString(sectionLength) + "\n" +

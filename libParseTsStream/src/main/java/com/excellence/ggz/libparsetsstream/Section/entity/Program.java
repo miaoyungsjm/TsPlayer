@@ -58,8 +58,7 @@ public class Program {
 
     @Override
     public String toString() {
-        return "------\n" +
-                "[Program] programNumber: 0x" + toHexString(programNumber) + "\n" +
+        return "[Program] programNumber: 0x" + toHexString(programNumber) + "\n" +
                 "[Program] networkId: 0x" + toHexString(networkId) + "\n" +
                 "[Program] programMapPid: 0x" + toHexString(programMapPid) + "\n" +
                 "[Program] programName: " + programName + "\n";
